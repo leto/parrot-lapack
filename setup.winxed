@@ -1,0 +1,90 @@
+$include_const "iglobals.pasm";
+$loadlib "io_ops";
+
+function main[main](argv) {
+  var parrot_lapack = {
+    "name"              : 'parrot-lapack',
+    "abstract"          : 'Parrot bindings for LAPACK',
+    "description"       : 'Parrot bindings for LAPACK - Fast Linear Algebra',
+    "authority"         : 'http://github.com/leto',
+    "copyright_holder"  : 'Jonathan "Duke" Leto',
+    "keywords"          : ["parrot", "mathematics", "lapack", "linear algebra"],
+    "license_type"      : 'Artistic License 2.0',
+    "license_uri"       : 'http://www.perlfoundation.org/artistic_license_2_0',
+    "checkout_uri"      : 'git://github.com/leto/parrot-lapack.git',
+    "browser_uri"       : 'git://github.com/leto/parrot-lapack',
+    "project_uri"       : 'git://github.com/leto/parrot-lapack',
+    "pir_winxed"        : {},
+    "pbc_pir"           : {},
+    "inst_lib"          : [],
+    "installable_pbc"   : {},
+    "include_winxed"    : {},
+    "manifest_includes" : ["README.md", "setup.winxed"]
+  };
+
+  if (argv[1] == "test")
+    do_test();
+
+  setup_stable_libraries(parrot_lapack);
+
+  load_bytecode('distutils.pir');
+  using setup;
+  using register_step_before;
+
+  register_step_before("build", check_dependencies);
+  register_step_before("clean", clean_build_dir);
+
+  argv.shift();
+  setup(argv, parrot_lapack);
+}
+
+function setup_stable_libraries(var parrot_lapack) {
+  var libs = [
+    'Common',
+  ];
+
+  string prefix = "./src/LAPACK/";
+
+  for (string source in libs) {
+    string winxed_file = prefix + source + ".winxed";
+    string pir_file    = prefix + source + ".pir";
+    string pbc_file    = prefix + source + ".pbc";
+    parrot_lapack["pir_winxed"][pir_file] = winxed_file;
+    parrot_lapack["pbc_pir"][pbc_file]    = pir_file;
+    parrot_lapack["inst_lib"].push(pbc_file);
+  }
+}
+
+function do_test() {
+  int result;
+  string cmd = "parrot-nqp t/harness";
+  ${ spawnw result, cmd };
+  ${ exit result };
+}
+
+function check_dependencies() {
+  var config = getinterp()[IGLOBALS_CONFIG_HASH];
+  // Check if Parrot is > 3.5.0
+  int maj = config['MAJOR'];
+  int min = config['MINOR'];
+  if (maj < 3 || (maj == 3 && min < 5)) {
+    die("You need at least Parrot 3.5.0 to use parrot-lapack");
+  }
+  // Check if Parrot has been built/configured with libffi
+  int has_libffi = config['has_libffi'];
+  if (!has_libffi) {
+    die("You need to have Parrot configured with libffi to use parrot-lapack");
+  }
+}
+
+function clean_build_dir() {
+  var config = getinterp()[IGLOBALS_CONFIG_HASH];
+  string exe = "build/lapack_test" + string(config['exe']);
+  int e = 0;
+  ${ stat e, exe, 0 };
+  if (e) {
+    say("unlink " + exe);
+    unlink(exe);
+  }
+  unlink("src/lapack.pbc");
+}
