@@ -1,0 +1,23 @@
+$include_const 'datatypes.pasm';
+$include_const "iglobals.pasm";
+
+const int DATATYPE_SIZE_T = DATATYPE_LONG; // TODO: probe for appropriate type
+
+function int_t[anon]() {
+  return new 'StructView'([DATATYPE_STRUCT, 1, DATATYPE_INT]);
+}
+
+function char_t[anon]() {
+  return new 'StructView'([DATATYPE_STRUCT, 1, DATATYPE_CHAR]);
+}
+
+function cstring(string s) {
+    var str_to_cstring = dlfunc(null, 'Parrot_str_to_cstring', 'ppS');
+    return str_to_cstring(getinterp(), s);
+}
+
+namespace LAPACK {
+
+  class Common {
+  }
+}
