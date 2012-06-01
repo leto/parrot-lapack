@@ -44,7 +44,11 @@ Beer, pull requests and patches welcome! Fork and be merry.
 
 ## Authors
 
-Jonathan "Duke" Leto
+Jonathan "Duke" Leto.
+
+## Developer
+
+Jashwanth Reddy M
 
 ## License
 
