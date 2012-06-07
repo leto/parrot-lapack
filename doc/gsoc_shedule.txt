@@ -1,0 +1,40 @@
+June,1-June,9	:First round of implementation of some basic LAPACK subroutines like the DGETRF,DGETRI ,ZGETRI and ZGETRF which are some of the start up computational routines and using them in PLA.
+
+
+June,1-June,9	:till now have been able to learn winxed and trying to implement my first test interface.
+
+
+June,11-June,16 :Start implementing the interface for calculating eigenvalues and eigenvectors using LAPACK subroutines DGEEV ,DTGEVC ,ZGEEZ and ZTGEVC.
+
+June,18-June,23 : Provide the default PLA functions to calculate eigenvalues and eigenvectors also test the interface for any errors.
+
+June,24-June,30 :Start building the project and add subroutines for the first kind of decomposition which computes an LU factorization of a general matrix, using partial pivoting with row interchanges by using DGETRF and ZGETRF sub routines from LAPACK
+
+July,2-July,7 :Start implementing the LU factorization function in PLA for which the LAPACK interface has been implemented.
+
+July,9-July,14 :Till now since the LU factorization being Implemented try to extend it to LDU form by using DSPSV ,ZSPSV subroutines from LAPACK and then use this form to calculate the determinant of a given matrix.
+
+July,16-July,21 :Writing a similar subroutine to calculate the determinant and also try using direct determinant calculation functions.
+
+July,23-July,28 :Testing the till date completed project to generating errors and try fixing them.Also the week is kept as a backup week so that any delay in the previous phases can be compensated here. 
+
+July,30-August,4:Continue and add second decomposition(QR-factorization) to the project using the DGEQRF ,DORGQR ,DORMQR for double-precision real value subroutines from LAPACK.
+
+August,6-August,11:Adding the interface for double-precision complex value subroutines such as ZGEQRF ,ZORGQR ,ZORMQR from LAPACK for QR-factorization.And also implementing these in PLA to do the same.
+
+August,13-August,18:For eigen-decomposition since the LAPACK  does not provide a subroutine to calculate them directly I will be using the subroutines DSYST,DSPGST,ZSYST,ZSPGST to do the eigen-decomposition.
+
+August,19-August,25:Will try to finish the the previous weeks pending coding and also try to code the function to implement the eigen-decomposition in PLA.
+
+August,26:-August,31:Trying to fully complete the project and providing final touchups to the project.
+
+*^ Every week there will be a constant reporting to the mentor about the executed part of the project,along with any issues related to project if any.
+
+*^ Unit testing of the implemented functions will be done along with the documentation and the results will be shared with the mentor and also blogged weekly.
+
+*^ Constant input will be taken from the mentor and core development members to make the project efficient.
+
+**^ There are some other subroutines which might be used and implemented such as DGETRI and ZGETRI compute inverses,DGESVD and ZGESVD compute singular values,DGESV and ZGESV compute linear system solutions,etc.from LAPACK which might not be mentioned but used in implementing to support the basic ones.
+
+**^ Some of the provided subroutines may not be used or might be replaced by others depending upon the real time experience with the subroutines.
+
