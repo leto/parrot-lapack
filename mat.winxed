@@ -36,7 +36,7 @@ function main[main](var args)
 	signature_function[0]='i';
 	signature_function[1]='p';
 	//dlfunc();
-	var dgetrf = dlfunc(lapack, "dgetrf_", "vvpvpv");	
+	var dgetrf = dlfunc(lapack, "dgetrf_", "vpppppp");	
 	if(dgetrf == null || !dgetrf)
 		die("Not DGETRF");
 	
@@ -78,8 +78,6 @@ function debug(var matrix, string msg, var args [slurpy])
 /*
 
 OUTPUT:
-
-
 WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 11
 WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 16
 In Winxed Main!
@@ -101,7 +99,7 @@ Matrix A:
 	3	4	5
 	6	7	8
 
-Unhandled NCI type: `void'
+get_pointer() not implemented in class 'NumMatrix2D'
 current instr.: 'main' pc 178 ((file unknown):80) (mat.winxed:43)
 
 
