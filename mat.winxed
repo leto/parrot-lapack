@@ -1,0 +1,25 @@
+function main[main](var args)
+{
+    	var pla = loadlib("linalg_group");
+	var lapack = loadlib('liblapack.so');
+    	if (lapack == null || !lapack)
+        	die("Cannot find liblapack. Search for the correct paths");
+	say("In Winxed Main!\n");
+	say("Matrix A:");
+   	var A = new 'NumMatrix2D';
+   	A.initialize_from_args(3, 3,
+                           	1.0, 2.0, 3.0,
+                           	4.0, 5.0, 6.0,
+                           	7.0, 8.0, 9.0);
+	var B = new 'NumMatrix2D';
+	B.initialize_from_args(3,3,
+				1.0,1.0,1.0,
+				1.0,1.0,1.0,
+				1.0,1.0,1.0);
+    	say(A);
+	say(B);
+	say(A+B);
+	say(A-B);
+	say("done");
+}
+
