@@ -74,3 +74,36 @@ function debug(var matrix, string msg, var args [slurpy])
     }
 }
 
+
+/*
+
+OUTPUT:
+
+
+WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 11
+WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 16
+In Winxed Main!
+
+Matrix A:
+	1	2	3
+	4	5	6
+	7	8	9
+
+	1	1	1
+	1	1	1
+	1	1	1
+
+	2	3	4
+	5	6	7
+	8	9	10
+
+	0	1	2
+	3	4	5
+	6	7	8
+
+Unhandled NCI type: `void'
+current instr.: 'main' pc 178 ((file unknown):80) (mat.winxed:43)
+
+
+*/
+
