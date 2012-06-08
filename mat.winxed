@@ -1,3 +1,5 @@
+const int PRINT_DEBUG_STUFF = 0;
+
 function main[main](var args)
 {
     	var pla = loadlib("linalg_group");
@@ -20,6 +22,55 @@ function main[main](var args)
 	say(B);
 	say(A+B);
 	say(A-B);
+	int m,n,lda,ipiv_size,info;
+	m=n=3;
+	lda=max(1,m);
+	ipiv_size=min(m,n);
+	int ipiv[ipiv_size];
+
+
+// have to call the function DGETRF using dlfunc();
+//signature of dlfunc :dlfunc(void * restrict handle, const char * restrict symbol);		
+	
+	var signature_function = new 'FixedIntegerArray'(2);
+	signature_function[0]='i';
+	signature_function[1]='p';
+	//dlfunc();
+	var dgetrf = dlfunc(lapack, "dgetrf_", "vvpvpv");	
+	if(dgetrf == null || !dgetrf)
+		die("Not DGETRF");
+	
+	dgetrf(m,n,A,lda,ipiv,info);
+	
+	say(m);
+	say(n);
+	say(lda);
+	say(ipiv_size);
+	say(max(3,5));
+	say(min(1,4));
+	say(signature_function);	
+
+	
 	say("done");
+
+
+}
+
+function max(var a,var b)
+{
+	return a>b?a:b;
+}
+
+function min(var a,var b)
+{
+        return a>b?b:a;
+}
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
 }
 
