@@ -2,63 +2,59 @@ const int PRINT_DEBUG_STUFF = 0;
 
 function main[main](var args)
 {
-    	var pla = loadlib("linalg_group");
-	var lapack = loadlib('liblapack.so');
-    	if (lapack == null || !lapack)
-        	die("Cannot find liblapack. Search for the correct paths");
-	say("In Winxed Main!\n");
-	say("Matrix A:");
-   	var A = new 'NumMatrix2D';
-   	A.initialize_from_args(3, 3,
-                           	1.0, 2.0, 3.0,
-                           	4.0, 5.0, 6.0,
-                           	7.0, 8.0, 9.0);
-	var B = new 'NumMatrix2D';
-	B.initialize_from_args(3,3,
-				1.0,1.0,1.0,
-				1.0,1.0,1.0,
-				1.0,1.0,1.0);
-    	say(A);
-	say(B);
-	say(A+B);
-	say(A-B);
-	int m,n,lda,ipiv_size,info;
-	m=n=3;
-	lda=max(1,m);
-	ipiv_size=min(m,n);
-	int ipiv[ipiv_size];
+        var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack. Search for the correct paths");
+        say("In Winxed Main!\n");
+        say("Matrix A:");
+        var A = new 'NumMatrix2D';
+        A.initialize_from_args(3, 3,
+                                1.0, 2.0, 3.0,
+                                4.0, 5.0, 6.0,
+                                7.0, 8.0, 9.0);
+        var B = new 'NumMatrix2D';
+        B.initialize_from_args(3,3,
+                                1.0,1.0,1.0,
+                                1.0,1.0,1.0,
+                                1.0,1.0,1.0);
+        say(A);
+        say(B);
+        say(A+B);
+        say(A-B);
+        int m,n,lda,ipiv_size,info;
+        m=n=3;
+        lda=max(1,m);
+        ipiv_size=min(m,n);
+        int ipiv[ipiv_size];
 
 
 // have to call the function DGETRF using dlfunc();
-//signature of dlfunc :dlfunc(void * restrict handle, const char * restrict symbol);		
-	
-	var signature_function = new 'FixedIntegerArray'(2);
-	signature_function[0]='i';
-	signature_function[1]='p';
-	//dlfunc();
-	var dgetrf = dlfunc(lapack, "dgetrf_", "vpppppp");	
-	if(dgetrf == null || !dgetrf)
-		die("Not DGETRF");
-	
-	dgetrf(m,n,A,lda,ipiv,info);
-	
-	say(m);
-	say(n);
-	say(lda);
-	say(ipiv_size);
-	say(max(3,5));
-	say(min(1,4));
-	say(signature_function);	
+//signature of dlfunc :dlfunc(void * restrict handle, const char * restrict symbol);
 
-	
-	say("done");
+        //dlfunc();
+        var dgetrf = dlfunc(lapack, "dgetrf_", "vpppppp");
+        if(dgetrf == null || !dgetrf)
+                die("Not DGETRF");
+
+        dgetrf(m,n,A,lda,ipiv,info);
+
+        say(m);
+        say(n);
+        say(lda);
+        say(ipiv_size);
+        say(max(3,5));
+        say(min(1,4));
+
+
+        say("done");
 
 
 }
 
 function max(var a,var b)
 {
-	return a>b?a:b;
+        return a>b?a:b;
 }
 
 function min(var a,var b)
@@ -77,31 +73,30 @@ function debug(var matrix, string msg, var args [slurpy])
 
 /*
 
-OUTPUT:
 WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 11
 WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 16
 In Winxed Main!
 
 Matrix A:
-	1	2	3
-	4	5	6
-	7	8	9
+        1       2       3
+        4       5       6
+        7       8       9
 
-	1	1	1
-	1	1	1
-	1	1	1
+        1       1       1
+        1       1       1
+        1       1       1
 
-	2	3	4
-	5	6	7
-	8	9	10
+        2       3       4
+        5       6       7
+        8       9       10
 
-	0	1	2
-	3	4	5
-	6	7	8
+        0       1       2
+        3       4       5
+        6       7       8
 
 get_pointer() not implemented in class 'FixedIntegerArray'
-current instr.: 'main' pc 178 ((file unknown):80) (mat.winxed:43)
+current instr.: 'main' pc 166 ((file unknown):74) (mat.winxed:40)
 
 
 */
-
+     
