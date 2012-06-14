@@ -32,15 +32,11 @@ function main[main](var args)
 // have to call the function DGETRF using dlfunc();
 //signature of dlfunc :dlfunc(void * restrict handle, const char * restrict symbol);		
 	
-	var signature_function = new 'FixedIntegerArray'(2);
-	signature_function[0]='i';
-	signature_function[1]='p';
 	//dlfunc();
 	var dgetrf = dlfunc(lapack, "dgetrf_", "vpppppp");	
 	if(dgetrf == null || !dgetrf)
 		die("Not DGETRF");
 	
-	dgetrf(m,n,A,lda,ipiv,info);
 	
 	say(m);
 	say(n);
@@ -48,9 +44,27 @@ function main[main](var args)
 	say(ipiv_size);
 	say(max(3,5));
 	say(min(1,4));
-	say(signature_function);	
 
+
+	dgetrf(m,n,A,lda,ipiv,info);
 	
+	if(info==0)
+	{
+		say("successful result");
+		say(info);
+		say(A);
+		say(ipiv);
+	}
+	else if(info<0)
+	{
+		int info_pos;
+		info_pos=-1*info;
+		say("the "+info_pos+"-th argument had an illegal value");
+	}
+	else
+	{
+		say("A["+info+","+info+"]is exactly zero. The factorization has been completed, but the factor U is exactly singular, and division by zero will occur if it is used to solve a system of equations.");
+	}
 	say("done");
 
 
@@ -74,10 +88,9 @@ function debug(var matrix, string msg, var args [slurpy])
     }
 }
 
-
 /*
 
-OUTPUT:
+Output
 WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 11
 WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 16
 In Winxed Main!
@@ -99,9 +112,21 @@ Matrix A:
 	3	4	5
 	6	7	8
 
-get_pointer() not implemented in class 'NumMatrix2D'
-current instr.: 'main' pc 178 ((file unknown):80) (mat.winxed:43)
+3
+3
+3
+3
+5
+1
+successful result
+0
+	3	0.333333333333333	0.666666666666667
+	6	2	0.5
+	9	4	0
+
+[ 3, 3, 3 ]
+done
+
 
 
 */
-
