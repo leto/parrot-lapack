@@ -40,7 +40,8 @@ function main[main](argv) {
 
 function setup_stable_libraries(var parrot_lapack) {
   var libs = [
-    'Common'
+    'Common',
+    'Double'
   ];
 
   string prefix = "./src/LAPACK/";
