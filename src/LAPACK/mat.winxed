@@ -15,13 +15,13 @@ function main[main](var args)
                            	7.0, 8.0, 9.0);
 	var B = new 'NumMatrix2D';
 	B.initialize_from_args(3,3,
-				1.0,1.0,1.0,
-				1.0,1.0,1.0,
-				1.0,1.0,1.0);
+				2.0,-1.0,3.0,
+				4.0,2.0,1.0,
+				-6.0,-1.0,2.0);
     	say(A);
 	say(B);
-	say(A+B);
-	say(A-B);
+	//say(A+B);
+	//say(A-B);
 	int m,n,lda,ipiv_size,info;
 	m=n=3;
 	lda=max(1,m);
@@ -46,13 +46,13 @@ function main[main](var args)
 	say(min(1,4));
 
 
-	dgetrf(m,n,A,lda,ipiv,info);
+	dgetrf(m,n,B,lda,ipiv,info);
 	
 	if(info==0)
 	{
 		say("successful result");
 		say(info);
-		say(A);
+		say(B);
 		say(ipiv);
 	}
 	else if(info<0)
@@ -88,45 +88,3 @@ function debug(var matrix, string msg, var args [slurpy])
     }
 }
 
-/*
-
-Output
-WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 11
-WARNING: class NumMatrix2D not found at compile time near 'NumMatrix2D' at mat.winxed line 16
-In Winxed Main!
-
-Matrix A:
-	1	2	3
-	4	5	6
-	7	8	9
-
-	1	1	1
-	1	1	1
-	1	1	1
-
-	2	3	4
-	5	6	7
-	8	9	10
-
-	0	1	2
-	3	4	5
-	6	7	8
-
-3
-3
-3
-3
-5
-1
-successful result
-0
-	3	0.333333333333333	0.666666666666667
-	6	2	0.5
-	9	4	0
-
-[ 3, 3, 3 ]
-done
-
-
-
-*/
