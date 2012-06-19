@@ -1,6 +1,8 @@
+namespace dgetrf_func{
+
 const int PRINT_DEBUG_STUFF = 0;
 
-function main[main](var args)
+function dgetrf_exec()
 {
     	var pla = loadlib("linalg_group");
 	var lapack = loadlib('liblapack.so');
@@ -80,6 +82,7 @@ function min(var a,var b)
         return a>b?b:a;
 }
 
+
 function debug(var matrix, string msg, var args [slurpy])
 {
     if (PRINT_DEBUG_STUFF) {
@@ -87,4 +90,17 @@ function debug(var matrix, string msg, var args [slurpy])
         say(matrix);
     }
 }
+
+}
+
+
+function main[main](var args)
+{
+	using dgetrf_func.dgetrf_exec;
+	dgetrf_exec();
+}
+
+
+
+
 
