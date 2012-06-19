@@ -1,0 +1,74 @@
+const int PRINT_DEBUG_STUFF = 0;
+
+function main[main](var args)
+{
+        var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack");
+        say("In Winxed Main!\n");
+        say("Matrix A:");
+        var a = new 'NumMatrix2D';
+        a.initialize_from_args(3, 3,
+                                11.0, 2.0, 3.0,
+                                4.0, 5.0, 6.0,
+                                7.0, 1.0, 2.0);
+	say(a);
+	
+	var dgetri = dlfunc(lapack, "dgetri_", "vppppppp");
+        if(dgetri == null || !dgetri)
+                die("Not DGETRI");
+	int n,m,lda,lwork,info,lwork_d;
+	var out = new 'NumMatrix2D';
+    //n is the order of the matrix
+	n=m=3;
+	lda=max(1,m);
+	lwork=lda=max(lda,n);
+	int ipiv[n];
+	lwork_d=max(1,lwork);
+		
+	say(n);
+	say(m);
+	say(lda);
+	say("lwork=",lwork);
+	say("lwork_d=",lwork_d);
+
+
+
+
+	var work=new 'NumMatrix2D';
+	work.resize(lwork_d,lwork_d);
+	
+	say(work);
+say("1");
+
+
+    //calling the function
+	
+	dgetri(n,a,lda,ipiv,work,lwork,info);
+
+say("1");
+	if(info==0)
+        {
+                say("successful result");
+		say(a);
+	}
+
+
+
+}
+
+
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
+}
