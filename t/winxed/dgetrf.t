@@ -1,5 +1,5 @@
 $load "rosella/test.pbc";
-$load "./src/LAPACK/Double.pbc";
+$load "../../src/LAPACK/Double.pbc";
 
 class Test_dgetrf{
 
@@ -16,8 +16,8 @@ class Test_dgetrf{
         b=dgetrf_exec(a);
 	say("printing B");
 	say(b);
-	//self.assert.notequal(b.rows,0);
-	//self.assert.notequal(b.cols,0);
+	self.assert.not_equal(b.rows,0);
+	self.assert.not_equal(b.cols,0);
 
 
     }
