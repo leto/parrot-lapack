@@ -9,8 +9,8 @@ function dgeev_exec(var A,var WR,var WI,var VL,var VR)
         if (lapack == null || !lapack)
                 die("Cannot find liblapack. Search for the correct paths");
 	say("found all functions");
-	var jobvl;
-	var jobvr;
+	int jobvl;
+	int jobvr;
 	int m,n,lda,ldvl,ldvr,lwork,info;
 	
 	var dgeev = dlfunc(lapack, "dgeev_", "vpppppppppppppp");
@@ -24,7 +24,7 @@ function dgeev_exec(var A,var WR,var WI,var VL,var VR)
 */
 
 	var WORK=new 'NumMatrix2D';
-	jobvl=jobvr='N';
+	jobvl=jobvr= ord('N', 0);
 	m=A.rows;
         n=A.cols;
 	
@@ -90,6 +90,18 @@ function main[main](var args)
         info=dgeev_exec(a,wr,wi,vl,vr);
         
 	if(info==0)
-	say("successful");
+	{
+		say("successful\n");
+		say("vr=\n",vr);
+		say("vl=\n",vl);
+		say("solution=\n");
+		int i,j;
+		for(i=0;i<3;++i)
+		{
+			for(j=0;j<3;++j)
+				print(wr[i,j],"+j",wi[i,j],"\t");
+			say();
+		}
+	}
 }
 
