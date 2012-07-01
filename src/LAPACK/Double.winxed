@@ -38,9 +38,9 @@ function dgetrf_exec(var A,int ipiv)
 	if(info==0)
 	{
 		say("successful result");
-		say(info);
-		say(A);
-		say(ipiv);
+//		say(info);
+//		say(A);
+//		say(ipiv);
 	}
 	else if(info<0)
 	{
