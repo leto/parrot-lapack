@@ -2,7 +2,7 @@ namespace dgetrf_func{
 
 const int PRINT_DEBUG_STUFF = 0;
 
-function dgetrf_exec(var A)
+function dgetrf_exec(var A,int ipiv)
 {
     	var pla = loadlib("linalg_group");
 	var lapack = loadlib('liblapack.so');
@@ -17,8 +17,7 @@ function dgetrf_exec(var A)
 	n=A.cols;
 	lda=max(1,m);
 	ipiv_size=min(m,n);
-	int ipiv[ipiv_size];
-
+	
 // have to call the function DGETRF using dlfunc();
 //signature of dlfunc :dlfunc(void * restrict handle, const char * restrict symbol);		
 	
@@ -54,7 +53,7 @@ function dgetrf_exec(var A)
 		say("A["+info+","+info+"]is exactly zero. The factorization has been completed, but the factor U is exactly singular, and division by zero will occur if it is used to solve a system of equations.");
 	}
 	say("done");
-	return A;
+	return info;
 
 }
 
@@ -68,6 +67,14 @@ function min(var a,var b)
         return a>b?b:a;
 }
 
+function ipiv_size(var A)
+{
+	int m,n,ipiv_size;
+        m=A.rows;
+        n=A.cols;
+        ipiv_size=min(m,n);
+        return ipiv_size;
+}
 
 function debug(var matrix, string msg, var args [slurpy])
 {
@@ -79,23 +86,33 @@ function debug(var matrix, string msg, var args [slurpy])
 
 }
 
-
 /*
+
 function main[main](var args)
 {
 
 	var pla = loadlib("linalg_group");
 	var a = new 'NumMatrix2D';
-        var b = new 'NumMatrix2D';
-        a.initialize_from_args(3, 3,
+	a.initialize_from_args(3, 3,
                                 11.0, 2.0, 3.0,
                                 4.0, 5.0, 6.0,
                                 7.0, 1.0, 2.0);
-
+	using dgetrf_func.ipiv_size;
+        int ipiv_size_v;
+	ipiv_size_v=ipiv_size(a);
+	say(ipiv_size_v);
+	int ipiv[ipiv_size_v];
+	int i;
+	for(i=0;i<ipiv_size_v;i++)
+		ipiv[i]=0;
+	say("printing ipiv:\n",ipiv);
         using dgetrf_func.dgetrf_exec;
-        b=dgetrf_exec(a);
-        say("printing B");
-        say(b);
+	int info;
+        info=dgetrf_exec(a,ipiv);
+        say("printing A");
+        say(a);
+	say();
+	say(ipiv);
 }
 
 */
