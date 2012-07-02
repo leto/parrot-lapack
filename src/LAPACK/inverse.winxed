@@ -1,6 +1,12 @@
+load "/Double.pbc";
+
+
+
+namespace dgetri_func{
+
 const int PRINT_DEBUG_STUFF = 0;
 
-function main[main](var args)
+function dgetri_exec(var a)
 {
         var pla = loadlib("linalg_group");
         var lapack = loadlib('liblapack.so');
@@ -8,11 +14,6 @@ function main[main](var args)
                 die("Cannot find liblapack");
         say("In Winxed Main!\n");
         say("Matrix A:");
-        var a = new 'NumMatrix2D';
-        a.initialize_from_args(3, 3,
-                                11.0, 2.0, 3.0,
-                                4.0, 5.0, 6.0,
-                                7.0, 1.0, 2.0);
 	say(a);
 	
 
@@ -29,18 +30,17 @@ function main[main](var args)
         int info_dgetrf;
         info_dgetrf=dgetrf_exec(a,ipiv);
 
-		
+
 	var dgetri = dlfunc(lapack, "dgetri_", "vppppppp");
         if(dgetri == null || !dgetri)
                 die("Not DGETRI");
 	int n,m,lda,lwork,info,lwork_d;
-	var out = new 'NumMatrix2D';
-//n is the order of the matrix
-	n=m=3;
+	m=a.rows;
+	n=a.cols;
 	lda=max(1,m);
 	lwork=lda=max(lda,n);
-//	int ipiv[n];
 	lwork_d=max(1,lwork);
+
 		
 	say(n);
 	say(m);
@@ -49,30 +49,24 @@ function main[main](var args)
 	say("lwork_d=",lwork_d);
 
 
-
-
 	var work=new 'NumMatrix2D';
-	work.resize(lwork_d,lwork_d);
-	
+	work.resize(lwork_d+1,lwork_d+1);
 	say(work);
-say("1");
+	say("1");
 
 
-    //calling the function
-	
+//calling the function
 	dgetri(n,a,lda,ipiv,work,lwork,info);
-
 say("1");
+
 	if(info==0)
         {
                 say("successful result");
 		say(a);
 	}
 
-
-
+	return info;
 }
-
 
 
 function max(var a,var b)
@@ -86,4 +80,20 @@ function debug(var matrix, string msg, var args [slurpy])
         say(sprintf(msg, args));
         say(matrix);
     }
+}
+
+}
+
+function main[main](var args)
+{
+	var pla = loadlib("linalg_group");
+	var a = new 'NumMatrix2D';
+        a.initialize_from_args(3, 3,
+                                11.0, 2.0, 3.0,
+                                4.0, 5.0, 6.0,
+                                7.0, 1.0, 2.0);
+	using dgetri_func.dgetri_exec;
+	int info;
+	info=dgetri_exec(a);
+	
 }
