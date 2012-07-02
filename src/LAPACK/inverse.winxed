@@ -13,9 +13,6 @@ function dgetri_exec(var a)
         if (lapack == null || !lapack)
                 die("Cannot find liblapack");
         say("In Winxed Main!\n");
-        say("Matrix A:");
-	say(a);
-	
 
 	using dgetrf_func.ipiv_size;
         int ipiv_size_v;
@@ -30,7 +27,9 @@ function dgetri_exec(var a)
         int info_dgetrf;
         info_dgetrf=dgetrf_exec(a,ipiv);
 
-
+        say("Matrix A:");
+	say(a);
+	
 	var dgetri = dlfunc(lapack, "dgetri_", "vppppppp");
         if(dgetri == null || !dgetri)
                 die("Not DGETRI");
