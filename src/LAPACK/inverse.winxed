@@ -1,4 +1,4 @@
-load "/Double.pbc";
+$load "/Double.pbc";
 
 
 
@@ -86,6 +86,7 @@ function debug(var matrix, string msg, var args [slurpy])
 
 function main[main](var args)
 {
+	say("hello");
 	var pla = loadlib("linalg_group");
 	var a = new 'NumMatrix2D';
         a.initialize_from_args(3, 3,
