@@ -24,7 +24,7 @@ function dgeev_exec(var A,var WR,var WI,var VL,var VR)
 */
 
 	var WORK=new 'NumMatrix2D';
-	jobvl=jobvr= ord('N', 0);
+	jobvl=jobvr= ord('V', 0);
 	m=A.rows;
         n=A.cols;
 	
@@ -92,9 +92,9 @@ function main[main](var args)
 	if(info==0)
 	{
 		say("successful\n");
-		say("vr=\n",vr);
-		say("vl=\n",vl);
-		say("solution=\n");
+		say("right eigenvectors=\n",vr);
+		say("left eigenvectors=\n",vl);
+		say("eigen values=\n");
 		int i,j;
 		for(i=0;i<3;++i)
 		{
