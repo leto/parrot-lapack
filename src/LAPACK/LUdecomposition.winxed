@@ -4,13 +4,14 @@ namespace ludecompo_func{
 
 const int PRINT_DEBUG_STUFF = 0;
 
-function Uform(var A,var u)
+function Uform(var A)
 {
 	var pla = loadlib("linalg_group");
 	int m,n;
 	m=A.rows;
 	n=A.cols;
-	//copy(A,u,m,n);	
+	//copy(A,u,m,n);
+	var u;
 	${clone u,A};
 	int i,j,k,pivoitrow;
 	var temp;
@@ -38,7 +39,7 @@ function Uform(var A,var u)
 			}
 		}
 	}
-	
+	return u;
 }
 
 
@@ -120,7 +121,7 @@ function main[main](var args)
                                 4.0, 1.0, -1.0,
                                 1.0, 1.0, 1.0);
 	using ludecompo_func.Uform;
-	Uform(a,u);
+	u=Uform(a);
 	say("Successful");
 	say("U=");
 	say(u);
