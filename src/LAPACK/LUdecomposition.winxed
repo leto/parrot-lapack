@@ -11,7 +11,7 @@ function Uform(var A,var u)
 	m=A.rows;
 	n=A.cols;
 	//copy(A,u,m,n);	
-	u=A.clone();
+	${clone u,A};
 	int i,j,k,pivoitrow;
 	var temp;
 	var index_temp;
@@ -38,7 +38,7 @@ function Uform(var A,var u)
 			}
 		}
 	}
-
+	
 }
 
 
