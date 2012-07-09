@@ -1,0 +1,94 @@
+namespace dspsv_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function depsv_exec(var A,var b)
+{
+
+	var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack. Search for the correct paths");
+        
+	int uplo,m,n,nrhs,ldb,info;
+	m=A.rows;
+	n=A.cols;
+	uplo=ord('U',0);
+	nrhs=b.cols;
+	int ipiv[n];
+	ldb=max(1,n);
+
+	var AP=new 'NumMatrix2D';
+	AP=create_ap(A);
+/*
+	int ap_size;
+	ap_size=((n*(n+1))/2);
+	AP.resize(ap_size,ap_size);
+*/
+	
+	var dspsv = dlfunc(lapack, "dspsv_", "vpppppppp");
+        if(dspsv == null || !dspsv)
+                die("Not DSPSV");
+	
+	dspsv(uplo,n,nrhs,AP,ipiv,b,ldb,info);
+	
+	if(info==0)
+		return AP;
+}
+
+function create_ap(var A)
+{
+	int m,n;
+	m=A.rows;
+        n=A.cols;
+	var pla = loadlib("linalg_group");
+	int ap_size;
+        ap_size=((n*(n+1))/2);
+	var ap=new 'NumMatrix2D';
+	ap.resize(ap_size,ap_size);
+	int i,j;
+	for(i=0;i<m;++i)
+		for(j=0;j<n;++j)
+			ap[i,j]=A[i,j];
+	return ap;
+}
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
+}
+
+}
+
+
+
+function main[main](var args)
+{
+	var pla = loadlib("linalg_group");
+	var a = new 'NumMatrix2D';
+        var b=new 'NumMatrix2D';
+	var ap=new 'NumMatrix2D';
+	a.initialize_from_args(3, 3,
+                                11.0, 2.0, 3.0,
+                                4.0, 5.0, 6.0,
+                                7.0, 1.0, 2.0);
+	b.initialize_from_args(3, 1,
+				0.0,
+				0.0,
+				0.0);
+        using dspsv_func.dspsv_exec;
+        ap=dspsv_exec(a,b);
+
+	say("successful");
+	say("AP=");
+	say(ap);
+
+}
