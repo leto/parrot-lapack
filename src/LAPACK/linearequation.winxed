@@ -2,7 +2,7 @@ namespace dspsv_func{
 
 const int PRINT_DEBUG_STUFF = 0;
 
-function depsv_exec(var A,var b)
+function dspsv_exec(var A,var b)
 {
 
 	var pla = loadlib("linalg_group");
@@ -16,8 +16,11 @@ function depsv_exec(var A,var b)
 	uplo=ord('U',0);
 	nrhs=b.cols;
 	int ipiv[n];
+	int j;
+	for(j=0;j<n;++j)
+		ipiv[j]=0;
 	ldb=max(1,n);
-
+say(b);
 	var AP=new 'NumMatrix2D';
 	AP=create_ap(A);
 /*
@@ -25,15 +28,15 @@ function depsv_exec(var A,var b)
 	ap_size=((n*(n+1))/2);
 	AP.resize(ap_size,ap_size);
 */
-	
+
 	var dspsv = dlfunc(lapack, "dspsv_", "vpppppppp");
         if(dspsv == null || !dspsv)
                 die("Not DSPSV");
 	
-	dspsv(uplo,n,nrhs,AP,ipiv,b,ldb,info);
+	dspsv(uplo,n,nrhs,A,ipiv,b,ldb,info);
 	
 	if(info==0)
-		return AP;
+		return A;
 }
 
 function create_ap(var A)
