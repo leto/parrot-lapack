@@ -10,7 +10,6 @@ function Uform(var A)
 	int m,n;
 	m=A.rows;
 	n=A.cols;
-	//copy(A,u,m,n);
 	var u;
 	${clone u,A};
 	int i,j,k,pivoitrow;
@@ -43,50 +42,24 @@ function Uform(var A)
 }
 
 
-function Lform(var A,var l,var u)
+function Lform(var A,var u)
 {
         var pla = loadlib("linalg_group");
         int m,n;
         m=A.rows;
         n=A.cols;
-	copy(A,l,m,n);
+	var l;
+	${clone l,A};
 	
         int i,j,k,pivoitrow;
-        var temp;
-        var index_temp;
-/*        for(i=m-1;i>0;--i)
-        {
-                pivoitrow=i;
-		say(pivoitrow);
-                for(j=n-1-(m-i-1);j>=0;--j)
-                {
-                        if(abs(l[i,j])>abs(l[pivoitrow,i]))
-                                pivoitrow=j;
-                }
-		say(pivoitrow);
-                for(k=0;k<n;++k)
-                {
-                        temp=l[i,k];
-                        l[i,k]=l[pivoitrow,k];
-                        l[pivoitrow,k]=temp;
-                }
-                for(j=i-1;j>=0;--j)
-                {
-                        index_temp=l[j,i]/l[i,i];
-                        for(k=0;k<i;++k)
-                        {
-                                l[j,k]=l[j,k]-(l[i,k]*index_temp);
-                        }
-                }
-        }
-*/
 
 	using dgetri_func.dgetri_exec;
         int info;
         info=dgetri_exec(u);
+say("Here is the error:");
 	l=A*u;
 
-
+	return l;
 }
 
 function abs(var a)
@@ -96,13 +69,16 @@ function abs(var a)
 	return (a);
 }
 
-function copy(var a,var u,var m,var n)
+/*
+function multiply(var P,var Q)
 {
-	int i,j;
-	for(i=0;i<m;++i)
-		for(j=0;j<n;++j)
-			u[i,j]=a[i,j];
+	
+
+
+
 }
+
+*/
 
 }
 
@@ -125,12 +101,18 @@ function main[main](var args)
 	say("Successful");
 	say("U=");
 	say(u);
-	//say("A=");
-	//say(a);
+	say("A=");
+	say(a);
 	using ludecompo_func.Lform;
-        Lform(a,l,u);
+        l=Lform(a,u);
         say("Successful");
         say("L=");
         say(l);
+
+
+using dgetri_func.dgetri_exec;
+        int info;
+        info=dgetri_exec(u);
+
 
 }
