@@ -1,4 +1,5 @@
 $load "inverse.pbc";
+$load "multiplication.pbc";
 
 namespace ludecompo_func{
 
@@ -56,9 +57,10 @@ function Lform(var A,var u)
 	using dgetri_func.dgetri_exec;
         int info;
         info=dgetri_exec(u);
-say("Here is the error:");
-	l=A*u;
-
+//say("Here is the error:");
+//	l=A*u;
+	using multiplication.matmul;
+        l=matmul(A,u);
 	return l;
 }
 
