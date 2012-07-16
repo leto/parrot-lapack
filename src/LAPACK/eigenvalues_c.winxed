@@ -1,0 +1,97 @@
+namespace dhgeqz_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function dhgeqz_exec(var h,var t,var alphar,var alphai,var beta,var q,var z,var work)
+{
+        var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack. Search for the correct paths");
+        
+
+	int job,compq,compz;
+	int m,n,ilo,ihi,ldh,ldt,ldq,ldz,lwork,info;
+	
+
+//h,t,alphar,alphai,beta,q,z,work
+
+	var dhgeqz = dlfunc(lapack, "dhgeqz_", "vpppppppppppppppppppp");
+	if(dhgeqz == null || !dhgeqz)
+                die("Not DHGEQZ");
+
+
+	job=ord('S', 0);
+	compq=ord('I', 0);
+	compz=ord('I', 0);
+	m=h.rows;
+	n=h.cols;
+	ilo=h.rows;
+	ihi=h.cols;
+	if(n==0)
+	{
+		ilo=1;
+		ihi=0;
+	}
+	if(ilo>ihi)
+		die("Matrix is not in Hessenberg form");
+	ldh=ldt=max(1,n);	
+	h.resize(ldh,n);
+	t.resize(ldt,n);
+	alphar.resize(n,n);
+	alphai.resize(n,n);
+	beta.resize(n,n);
+	ldq=ldz=1;	
+	if(compq=='V' || compq=='I')
+		ldq=ldz=n+1;
+	q.resize(ldq,n);
+	z.resize(ldz,n);
+	lwork=max(1,n+1);
+	work.resize(lwork,lwork);
+	
+	
+	dhgeqz(job,compq,compz,n,ilo,ihi,h,ldh,t,ldt,alphar,alphai,beta,q,ldq,z,ldz,work,lwork,info);
+
+
+
+
+
+}
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+
+
+
+}
+
+
+//
+function main[main](var args)
+{
+	var pla = loadlib("linalg_group");
+        var h = new 'NumMatrix2D';
+        var t = new 'NumMatrix2D';
+        
+	var alphar=new 'NumMatrix2D';
+        var alphai=new 'NumMatrix2D';
+        var beta = new 'NumMatrix2D';
+	var q=new 'NumMatrix2D';
+	var z=new 'NumMatrix2D';
+	var work=new 'NumMatrix2D';
+
+		
+
+	int info;
+	using dhgeqz_func.dhgeqz_exec;
+	info=dhgeqz_exec(h,t,alphar,alphai,beta,q,z,work);
+	if(info==0)
+		say("successful");
+
+}
+
+
+//

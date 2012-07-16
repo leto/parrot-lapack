@@ -1,0 +1,70 @@
+namespace multiplication{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function matmul(var A,var B)
+{
+	int m1,n1,m2,n2;
+	m1=A.rows;
+	n1=A.cols;
+	m2=B.rows;
+	n2=B.cols;
+	if(n1==m2)
+	{
+		var pla = loadlib("linalg_group");
+		var R=new 'NumMatrix2D';
+		R.resize(m1,n2);
+		int i,j,k;
+		for(i=0;i<m1;++i)
+		{
+			for(j=0;j<n2;++j)
+			{
+				for(k=0;k<m2;++k)
+				{
+					R[i,j]=R[i,j]+(A[i,k]*B[k,j]);
+				}
+			}
+		}
+		return R;
+	}
+	else
+	{
+		die("Matrix multiplication not possible");
+	}
+}
+
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
+}
+
+
+
+
+}
+
+
+function main[main](var args)
+{
+	var pla = loadlib("linalg_group");
+        var A=new 'NumMatrix2D';
+        var B=new 'NumMatrix2D';
+        A.initialize_from_args(3, 3,
+                                1.0, 1.0, 1.0,
+                                1.0, 1.0, 1.0,
+                                1.0, 1.0, 1.0);
+	B.initialize_from_args(3, 3,
+                                1.0, 1.0, 1.0,
+                                1.0, 1.0, 1.0,
+                                1.0, 1.0, 1.0);
+	var result=new 'NumMatrix2D';
+	using multiplication.matmul;
+	result=matmul(A,B);
+	say("result=");
+	say(result);
+
+}

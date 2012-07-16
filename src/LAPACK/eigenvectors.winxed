@@ -1,0 +1,75 @@
+namespace dtgevc_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function dtgevc_exec(var S,var P,var VL,var VR,var WORK)
+{
+        var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack. Search for the correct paths");
+        say("found all functions");
+        
+	int side,howmny;
+	var SELECT=new 'ResizableBooleanArray';
+	
+        int m,n,lds,ldp,ldvl,ldvr,lwork,mm,m,info;
+
+        var dtgevc = dlfunc(lapack, "dtgevc_", "vpppppppppppppppp");
+        if(dtgevc == null || !dtgevc)
+                die("Not DTGEVC");
+
+        m=S.rows;
+        n=S.cols;
+	side=ord('B', 0);
+	howmny=ord('S',0);
+	SELECT.resize(n);
+	
+
+}
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+}
+
+
+
+function main[main](var args)
+{
+
+        var pla = loadlib("linalg_group");
+        var s = new 'NumMatrix2D';
+        var p = new 'NumMatrix2D';
+        var vl=new 'NumMatrix2D';
+        var vr=new 'NumMatrix2D';
+        var work = new 'NumMatrix2D';
+        var info;
+        s.initialize_from_args(3, 3,
+                                11.0, 2.0, 3.0,
+                                4.0, 5.0, 6.0,
+                                7.0, 1.0, 2.0);
+
+        using dtgevc_func.dtgevc_exec;
+        info=dtgevc_exe(s,p,vl,vr,work);
+
+        if(info==0)
+        {
+                say("successful\n");
+                say("vr=\n",vr);
+                say("vl=\n",vl);
+                say("solution=\n");
+
+                        say();
+                }
+        }
+}
+
+
+
+
+
+
+

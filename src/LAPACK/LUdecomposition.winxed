@@ -1,0 +1,120 @@
+$load "inverse.pbc";
+$load "multiplication.pbc";
+
+namespace ludecompo_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function Uform(var A)
+{
+	var pla = loadlib("linalg_group");
+	int m,n;
+	m=A.rows;
+	n=A.cols;
+	var u;
+	${clone u,A};
+	int i,j,k,pivoitrow;
+	var temp;
+	var index_temp;
+	for(i=0;i<m;++i)
+	{
+		pivoitrow=i;
+		for(j=i+1;j<m;++j)
+		{
+			if(abs(u[i,j])>abs(u[pivoitrow,i]))
+				pivoitrow=j;
+		}
+		for(k=i;k<n;++k)
+		{
+			temp=u[i,k];
+			u[i,k]=u[pivoitrow,k];
+			u[pivoitrow,k]=temp;
+		}
+		for(j=i+1;j<m;++j)
+		{
+			index_temp=u[j,i]/u[i,i];
+			for(k=i;k<n;++k)
+			{
+				u[j,k]=u[j,k]-(u[i,k]*index_temp);
+			}
+		}
+	}
+	return u;
+}
+
+
+function Lform(var A,var u)
+{
+        var pla = loadlib("linalg_group");
+        int m,n;
+        m=A.rows;
+        n=A.cols;
+	var l;
+	${clone l,A};
+	
+        int i,j,k,pivoitrow;
+
+	using dgetri_func.dgetri_exec;
+        int info;
+        info=dgetri_exec(u);
+//say("Here is the error:");
+//	l=A*u;
+	using multiplication.matmul;
+        l=matmul(A,u);
+	return l;
+}
+
+function abs(var a)
+{
+	if(a<0)
+		return (-1*a);
+	return (a);
+}
+
+/*
+function multiply(var P,var Q)
+{
+	
+
+
+
+}
+
+*/
+
+}
+
+
+
+
+function main[main](var args)
+{
+
+        var pla = loadlib("linalg_group");
+        var a = new 'NumMatrix2D';
+        var u=new 'NumMatrix2D';
+        var l=new 'NumMatrix2D';
+	a.initialize_from_args(3, 3,
+                                2.0, -1.0, 1.0,
+                                4.0, 1.0, -1.0,
+                                1.0, 1.0, 1.0);
+	using ludecompo_func.Uform;
+	u=Uform(a);
+	say("Successful");
+	say("U=");
+	say(u);
+	say("A=");
+	say(a);
+	using ludecompo_func.Lform;
+        l=Lform(a,u);
+        say("Successful");
+        say("L=");
+        say(l);
+
+
+using dgetri_func.dgetri_exec;
+        int info;
+        info=dgetri_exec(u);
+
+
+}

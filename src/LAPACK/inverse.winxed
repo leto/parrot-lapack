@@ -1,0 +1,92 @@
+$load "Double.pbc";
+
+namespace dgetri_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function dgetri_exec(var a)
+{
+        var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack");
+
+	using dgetrf_func.ipiv_size;
+        int ipiv_size_v;
+        ipiv_size_v=ipiv_size(a);
+//      say(ipiv_size_v);
+        int ipiv[ipiv_size_v];
+        int i;
+        for(i=0;i<ipiv_size_v;i++)
+                ipiv[i]=0;
+//      say("printing ipiv:\n",ipiv);
+        //using dgetrf_func.dgetrf_exec;
+        //int info_dgetrf;
+        //info_dgetrf=dgetrf_exec(a,ipiv);
+
+        say("Given Matrix:");
+	say(a);
+	
+	var dgetri = dlfunc(lapack, "dgetri_", "vppppppp");
+        if(dgetri == null || !dgetri)
+                die("Not DGETRI");
+	int n,m,lda,lwork,info,lwork_d;
+	m=a.rows;
+	n=a.cols;
+	lda=max(1,m);
+	lwork=lda=max(lda,n);
+	lwork_d=max(1,lwork);
+
+		
+//	say(n);
+//	say(m);
+//	say(lda);
+//	say("lwork=",lwork);
+//	say("lwork_d=",lwork_d);
+
+
+	var work=new 'NumMatrix2D';
+	work.resize(lwork_d,lwork_d);
+
+
+//calling the function
+	dgetri(n,a,lda,ipiv,work,lwork,info);
+
+	if(info==0)
+        {
+                say("successful result");
+		say(a);
+	}
+
+	return info;
+}
+
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
+}
+
+}
+
+function main[main](var args)
+{
+	var pla = loadlib("linalg_group");
+	var a = new 'NumMatrix2D';
+        a.initialize_from_args(3, 3,
+                                2.0, -1.0, 1.0,
+                                0.0, 3.0, -3.0,
+                                0.0, 0.0, 2.0);
+	using dgetri_func.dgetri_exec;
+	int info;
+	info=dgetri_exec(a);
+	
+}
