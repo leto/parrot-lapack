@@ -4,13 +4,9 @@ const int PRINT_DEBUG_STUFF = 0;
 
 function dgetrf_exec(var A,int ipiv)
 {
-    	var pla = loadlib("linalg_group");
 	var lapack = loadlib('liblapack.so');
-    	if (lapack == null || !lapack)
-        	die("Cannot find liblapack. Search for the correct paths");
-	say("In Winxed Main!\n");
-	say("Matrix A:");
-    	say(A);
+    if (lapack == null || !lapack)
+        die("Cannot find liblapack. Search for the correct paths");
 
 	int m,n,lda,ipiv_size,info;
 	m=A.rows;
@@ -85,34 +81,3 @@ function debug(var matrix, string msg, var args [slurpy])
 }
 
 }
-
-/*
-
-function main[main](var args)
-{
-
-	var pla = loadlib("linalg_group");
-	var a = new 'NumMatrix2D';
-	a.initialize_from_args(3, 3,
-                                11.0, 2.0, 3.0,
-                                4.0, 5.0, 6.0,
-                                7.0, 1.0, 2.0);
-	using dgetrf_func.ipiv_size;
-        int ipiv_size_v;
-	ipiv_size_v=ipiv_size(a);
-	say(ipiv_size_v);
-	int ipiv[ipiv_size_v];
-	int i;
-	for(i=0;i<ipiv_size_v;i++)
-		ipiv[i]=0;
-	say("printing ipiv:\n",ipiv);
-        using dgetrf_func.dgetrf_exec;
-	int info;
-        info=dgetrf_exec(a,ipiv);
-        say("printing A");
-        say(a);
-	say();
-	say(ipiv);
-}
-
-*/
