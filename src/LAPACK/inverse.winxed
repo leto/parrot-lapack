@@ -14,15 +14,10 @@ function dgetri_exec(var a)
 	using dgetrf_func.ipiv_size;
         int ipiv_size_v;
         ipiv_size_v=ipiv_size(a);
-//      say(ipiv_size_v);
         int ipiv[ipiv_size_v];
         int i;
         for(i=0;i<ipiv_size_v;i++)
                 ipiv[i]=0;
-//      say("printing ipiv:\n",ipiv);
-        //using dgetrf_func.dgetrf_exec;
-        //int info_dgetrf;
-        //info_dgetrf=dgetrf_exec(a,ipiv);
 
         say("Given Matrix:");
 	say(a);
@@ -77,16 +72,4 @@ function debug(var matrix, string msg, var args [slurpy])
 
 }
 
-function main[main](var args)
-{
-	var pla = loadlib("linalg_group");
-	var a = new 'NumMatrix2D';
-        a.initialize_from_args(3, 3,
-                                2.0, -1.0, 1.0,
-                                0.0, 3.0, -3.0,
-                                0.0, 0.0, 2.0);
-	using dgetri_func.dgetri_exec;
-	int info;
-	info=dgetri_exec(a);
-	
-}
+
