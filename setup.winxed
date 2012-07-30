@@ -41,7 +41,11 @@ function main[main](argv) {
 function setup_stable_libraries(var parrot_lapack) {
   var libs = [
     'Common',
-    'Double'
+    'Double',
+    'inverse',
+    'multiplication',
+    'qrfactorisation',
+    'orthoqrfactorisation'
   ];
 
   string prefix = "./src/LAPACK/";
