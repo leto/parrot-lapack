@@ -1,0 +1,96 @@
+namespace dorgqr_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function dorgqr_exec(var A,int k)
+{
+	
+	var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack. Search for the correct paths");
+
+        say("Given Matrix:");
+        say(A);
+	
+	int m,n,lda,lwork,work_s,tau_s,info;
+	
+	m=A.rows;
+	n=A.cols;
+	lda=max(1,m);
+	tau_s=min(m,n);
+	int tau_t[tau_s];
+	int i;
+	for(i=0;i<tau_s;++i)
+		tau_t[i]=0;
+	lwork=max(1,n);
+	work_s=max(1,lwork);
+	int work[work_s];	
+	for(i=0;i<work_s;++i)
+		work[i]=0;
+	
+	var dgeqrf = dlfunc(lapack, "dgeqrf_", "vpppppppp");
+        if(dgeqrf == null || !dgeqrf)
+                die("Not DGEQRF");
+	
+	var dorgqr = dlfunc(lapack, "dorgqr_", "vppppppppp");
+        if(dorgqr == null || !dorgqr)
+                die("Not DORGQR");	
+
+	dgeqrf(m,n,A,lda,tau_t,work,lwork,info);
+
+
+
+	int tau[k];
+	for(i=0;i<k;++i)
+		tau[i]=tau_t[i];
+	for(i=0;i<work_s;++i)
+		work[i]=0;
+	
+	
+	dorgqr(m,n,k,A,lda,tau,work,lwork,info);
+
+	return info;
+
+}
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+function min(var a,var b)
+{
+        return a>b?b:a;
+}
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
+}
+
+}
+
+/*
+
+function main[main](var args)
+{
+
+        var pla = loadlib("linalg_group");
+        var a = new 'NumMatrix2D';
+        a.initialize_from_args(3, 3,
+                                1.0, 0.0, 0.0,
+                                0.0, 1.0, 0.0,
+                                0.0, 0.0, 1.0);
+        using dorgqr_func.dorgqr_exec;
+        int info;
+        info=dorgqr_exec(a,2);
+	if(info==0)
+		say(a);
+	say("");
+}
+
+*/
