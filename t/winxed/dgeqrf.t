@@ -8,16 +8,18 @@ class Test_dgeqrf
     {
 	var pla = loadlib("linalg_group");
         var a = new 'NumMatrix2D';
+        var b = new 'NumMatrix2D';
         a.initialize_from_args(3, 3,
                                 1.0, 0.0, 0.0,
                                 0.0, 1.0, 0.0,
                                 0.0, 0.0, 1.0);
-//have to make a copy of a 
+ 
 	int info;
+	${ clone a, b};
 	using dgeqrf_func.dgeqrf_exec;
 	info=dgeqrf_exec(a);
         self.assert.equal(info,0);
-	self.assert.equal(a,a);
+	self.assert.equal(a,b);
 	say("printing A");
         say(a);
 	
