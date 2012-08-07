@@ -1,10 +1,10 @@
 $load "rosella/test.pbc";
 $load "../../src/LAPACK/eigenvalues.pbc";
 
-class Test_dorgqr
+class Test_dgeev
 {
 
-    function dorgqr_test()
+    function dgeev_test()
     {
 	var pla = loadlib("linalg_group");
         var a = new 'NumMatrix2D';
@@ -51,5 +51,5 @@ class Test_dorgqr
 function main[main](var args)
 {
 	using Rosella.Test.test;
-	test(class Test_dorgqr);
+	test(class Test_dgeev);
 }
