@@ -4,6 +4,39 @@ const int PRINT_DEBUG_STUFF = 0;
 
 function matmul(var A,var B)
 {
+
+		var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack. Search for the correct paths");
+        
+        int transa,transb,m,n,k,lda,ldb,ldc;
+        transa=transb=ord('N',0);
+        m=A.rows;
+        n=B.cols;
+        k=A.cols;
+        lda=ldc=max(1,m);
+        ldb=max(1,n);
+
+        var alpha=new 'NumMatrix2D';
+        var beta=new 'NumMatrix2D';
+        alpha.resize(m,k);
+        int i;
+        for(i=0;i<m;++i)
+        	alpha[i,i]=1;
+
+        var dgemm = dlfunc(lapack, "dgemm_", "vppppppppppppp");
+		if(dgemm == null || !dgemm)
+                die("Not DGEMM");
+
+        var C=new 'NumMatrix2D';
+        C.resize(ldc,n);
+        beta.resize(ldc,n);
+        dgemm(transa,transb,m,n,k,alpha,A,lda,B,ldb,beta,C,ldc);
+        return C;
+
+}
+/*
 	int m1,n1,m2,n2;
 	m1=A.rows;
 	n1=A.cols;
@@ -31,8 +64,14 @@ function matmul(var A,var B)
 	{
 		die("Matrix multiplication not possible");
 	}
-}
+*/	
 
+
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
 
 function debug(var matrix, string msg, var args [slurpy])
 {
@@ -43,9 +82,8 @@ function debug(var matrix, string msg, var args [slurpy])
 }
 
 
-
-
 }
+
 
 
 function main[main](var args)
@@ -54,17 +92,17 @@ function main[main](var args)
         var A=new 'NumMatrix2D';
         var B=new 'NumMatrix2D';
         A.initialize_from_args(3, 3,
-                                1.0, 1.0, 1.0,
-                                1.0, 1.0, 1.0,
-                                1.0, 1.0, 1.0);
-	B.initialize_from_args(3, 3,
-                                1.0, 1.0, 1.0,
-                                1.0, 1.0, 1.0,
-                                1.0, 1.0, 1.0);
+                                1.0, 0.0, 0.0,
+                                0.0, 1.0, 0.0,
+                                0.0, 0.0, 1.0);
+		B.initialize_from_args(3, 3,
+                                1.0, 0.0, 0.0,
+                                0.0, 1.0, 0.0,
+                                0.0, 0.0, 1.0);
 	var result=new 'NumMatrix2D';
 	using multiplication.matmul;
 	result=matmul(A,B);
 	say("result=");
 	say(result);
-
+	return 0;
 }
