@@ -45,7 +45,10 @@ function setup_stable_libraries(var parrot_lapack) {
     'inverse',
     'multiplication',
     'qrfactorisation',
-    'orthoqrfactorisation'
+    'orthoqrfactorisation',
+    'eigenvalues',
+    'eigenvectors',
+    'linearequation'
   ];
 
   string prefix = "./src/LAPACK/";
