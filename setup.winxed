@@ -48,7 +48,15 @@ function setup_stable_libraries(var parrot_lapack) {
     'orthoqrfactorisation',
     'eigenvalues',
     'eigenvectors',
-    'linearequation'
+    'linearequation',
+    'C_Double',
+    'C_inverse',
+    'C_eigenvalues',
+    'C_eigenvectors',
+    'C_linearequation',
+    'C_qrfactorisation',
+    'singlevaluedecomposition',
+    'C_singlevaluedecomposition'
   ];
 
   string prefix = "./src/LAPACK/";
