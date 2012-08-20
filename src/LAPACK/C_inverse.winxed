@@ -1,0 +1,88 @@
+$load "C_Double.pbc";
+
+namespace zgetri_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function zgetri_exec(var a)
+{
+        var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack");
+
+	int n,m,ipiv_size;
+	m=a.rows;
+        n=a.cols;
+        ipiv_size=min(m,n);
+        int ipiv[n];
+        int i;
+        for(i=0;i<n;i++)
+                ipiv[i]=0;
+
+        say("Given Matrix:");
+	say(a);
+	
+	var zgetri = dlfunc(lapack, "zgetri_", "vppppppp");
+        if(zgetri == null || !zgetri)
+                die("Not ZGETRI");
+
+	int lda,lwork,info;
+	lda=max(1,m);
+	lda=max(lda,n);
+	lwork=max(1,n);
+
+	
+
+	int work[lwork];
+	for(i=0;i<n;++i)
+		work[i]=0;
+
+//calling the function
+	zgetri(n,a,lda,ipiv,work,lwork,info);
+
+	return info;
+}
+
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+function min(var a,var b)
+{
+        return a<b?a:b;
+}
+
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
+}
+
+}
+
+/*
+
+function main[main](var args)
+{
+
+        var pla = loadlib("linalg_group");
+        var a = new 'ComplexMatrix2D';
+        a.initialize_from_args(3, 3,
+                                1.0, 0.0, 0.0,
+                                0.0, 1.0, 0.0,
+                                0.0, 0.0, 1.0);
+        using zgetri_func.zgetri_exec;
+        int info;
+        info=zgetri_exec(a);
+	if(info==0)
+		say(a);
+	say("");
+}
+
+*/
