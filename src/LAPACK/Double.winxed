@@ -9,8 +9,6 @@ function dgetrf_exec(var A,int ipiv)
 {
     	var pla = loadlib("linalg_group");
 
-// 
-
 		var lapack = loadlib('liblapack.so');
     	if (lapack == null || !lapack)
         	die("Cannot find liblapack. Search for the correct paths");
