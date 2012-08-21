@@ -1,3 +1,6 @@
+//DGETRF computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+
+
 namespace dgetrf_func{
 
 const int PRINT_DEBUG_STUFF = 0;
@@ -5,7 +8,10 @@ const int PRINT_DEBUG_STUFF = 0;
 function dgetrf_exec(var A,int ipiv)
 {
     	var pla = loadlib("linalg_group");
-	var lapack = loadlib('liblapack.so');
+
+// 
+
+		var lapack = loadlib('liblapack.so');
     	if (lapack == null || !lapack)
         	die("Cannot find liblapack. Search for the correct paths");
 
@@ -34,6 +40,15 @@ function dgetrf_exec(var A,int ipiv)
 
 
 	dgetrf(m,n,A,lda,ipiv,info);
+
+/*
+info 	  = 0:  successful exit
+          < 0:  if INFO = -i, the i-th argument had an illegal value
+          > 0:  if INFO = i, U(i,i) is exactly zero. The factorization
+                has been completed, but the factor U is exactly
+                singular, and division by zero will occur if it is used
+                to solve a system of equations.
+*/
 	
 	if(info==0)
 	{
@@ -57,15 +72,21 @@ function dgetrf_exec(var A,int ipiv)
 
 }
 
+//computes the max value
+
 function max(var a,var b)
 {
 	return a>b?a:b;
 }
 
+//computes the min value
+
 function min(var a,var b)
 {
         return a>b?b:a;
 }
+
+//helps in determining the size of ipiv
 
 function ipiv_size(var A)
 {
