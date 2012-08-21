@@ -58,7 +58,7 @@ function setup_stable_libraries(var parrot_lapack) {
     'singlevaluedecomposition',
     'C_singlevaluedecomposition'
   ];
-
+//list of libraries integrated from LAPACK
   string prefix = "./src/LAPACK/";
 
   for (string source in libs) {
