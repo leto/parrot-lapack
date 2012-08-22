@@ -30,7 +30,7 @@ function dgetri_exec(var a)
 	int lda,lwork,info;
 	lda=max(1,m);
 	lda=max(lda,n);
-	lwork_d=max(1,n);
+	lwork=max(1,n);
 
 		
 //	say(n);
@@ -38,7 +38,7 @@ function dgetri_exec(var a)
 //	say(lda);
 //	say("lwork=",lwork);
 
-	int work[lwork_d];
+	int work[lwork];
 	for(i=0;i<n;++i)
 		work[i]=0;
 
