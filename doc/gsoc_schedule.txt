@@ -1,9 +1,5 @@
 June,1-June,9	:First round of implementation of some basic LAPACK subroutines like the DGETRF,DGETRI ,ZGETRI and ZGETRF which are some of the start up computational routines and using them in PLA.
 
-
-June,1-June,9	:till now have been able to learn winxed and trying to implement my first test interface.
-
-
 June,11-June,16 :Start implementing the interface for calculating eigenvalues and eigenvectors using LAPACK subroutines DGEEV ,DTGEVC ,ZGEEZ and ZTGEVC.
 
 June,18-June,23 : Provide the default PLA functions to calculate eigenvalues and eigenvectors also test the interface for any errors.

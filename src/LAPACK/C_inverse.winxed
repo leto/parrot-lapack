@@ -1,10 +1,10 @@
-$load "Double.pbc";
+$load "C_Double.pbc";
 
-namespace dgetri_func{
+namespace zgetri_func{
 
 const int PRINT_DEBUG_STUFF = 0;
 
-function dgetri_exec(var a)
+function zgetri_exec(var a)
 {
         var pla = loadlib("linalg_group");
         var lapack = loadlib('liblapack.so');
@@ -23,27 +23,23 @@ function dgetri_exec(var a)
         say("Given Matrix:");
 	say(a);
 	
-	var dgetri = dlfunc(lapack, "dgetri_", "vppppppp");
-        if(dgetri == null || !dgetri)
-                die("Not DGETRI");
+	var zgetri = dlfunc(lapack, "zgetri_", "vppppppp");
+        if(zgetri == null || !zgetri)
+                die("Not ZGETRI");
 
 	int lda,lwork,info;
 	lda=max(1,m);
 	lda=max(lda,n);
-	lwork_d=max(1,n);
+	lwork=max(1,n);
 
-		
-//	say(n);
-//	say(m);
-//	say(lda);
-//	say("lwork=",lwork);
+	
 
-	int work[lwork_d];
+	int work[lwork];
 	for(i=0;i<n;++i)
 		work[i]=0;
 
 //calling the function
-	dgetri(n,a,lda,ipiv,work,lwork,info);
+	zgetri(n,a,lda,ipiv,work,lwork,info);
 
 	return info;
 }
@@ -70,18 +66,23 @@ function debug(var matrix, string msg, var args [slurpy])
 
 }
 
+/*
+
 function main[main](var args)
 {
 
         var pla = loadlib("linalg_group");
-        var a = new 'NumMatrix2D';
+        var a = new 'ComplexMatrix2D';
         a.initialize_from_args(3, 3,
                                 1.0, 0.0, 0.0,
                                 0.0, 1.0, 0.0,
                                 0.0, 0.0, 1.0);
-        using dgetri_func.dgetri_exec;
+        using zgetri_func.zgetri_exec;
         int info;
-        info=dgetri_exec(a);
-	say(a);
-
+        info=zgetri_exec(a);
+	if(info==0)
+		say(a);
+	say("");
 }
+
+*/

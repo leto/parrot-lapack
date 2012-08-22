@@ -41,9 +41,24 @@ function main[main](argv) {
 function setup_stable_libraries(var parrot_lapack) {
   var libs = [
     'Common',
-    'Double'
+    'Double',
+    'inverse',
+    'multiplication',
+    'qrfactorisation',
+    'orthoqrfactorisation',
+    'eigenvalues',
+    'eigenvectors',
+    'linearequation',
+    'C_Double',
+    'C_inverse',
+    'C_eigenvalues',
+    'C_eigenvectors',
+    'C_linearequation',
+    'C_qrfactorisation',
+    'singlevaluedecomposition',
+    'C_singlevaluedecomposition'
   ];
-
+//list of libraries integrated from LAPACK
   string prefix = "./src/LAPACK/";
 
   for (string source in libs) {

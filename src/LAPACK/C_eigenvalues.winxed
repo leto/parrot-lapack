@@ -1,0 +1,76 @@
+namespace zgeev_func_eva{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function zgeev_exec_eva(var A,var W,int jobvl,int jobvr)
+{
+        var pla = loadlib("linalg_group");
+        var lapack = loadlib('liblapack.so');
+        if (lapack == null || !lapack)
+                die("Cannot find liblapack. Search for the correct paths");
+		var VL=new 'ComplexMatrix2D';
+        var VR=new 'ComplexMatrix2D';
+		int m,n,lda,ldvl,ldvr,lwork,info,rwork;
+	
+	var zgeev = dlfunc(lapack, "zgeev_", "vpppppppppppppp");
+		if(zgeev == null || !zgeev)
+                die("Not zgeev");
+
+	var WORK=new 'ComplexMatrix2D';
+	
+		m=A.rows;
+        n=A.cols;
+	
+	if(m==n)
+	{
+		lda=max(1,n);
+		W.resize(n,n);
+		ldvl=ldvr=max(1,n);
+		VL.resize(ldvl,n);
+		VR.resize(ldvr,n);
+		lwork=max(1,n*2);
+		lwork=max(1,n*2);
+		WORK.resize(lwork,lwork);
+	}
+
+	
+	zgeev(jobvl,jobvr,n,A,lda,W,VL,ldvl,VR,ldvr,WORK,lwork,rwork,info);	
+	return info;
+}
+
+function max(var a,var b)
+{
+        return a>b?a:b;
+}
+
+}
+
+/*
+
+function main[main](var args)
+{
+
+        var pla = loadlib("linalg_group");
+        var a = new 'ComplexMatrix2D';
+		var w=new 'ComplexMatrix2D';
+
+        int jobvl,jobvr;
+        jobvl=jobvr= ord('N', 0);
+		var info;
+        a.initialize_from_args(3, 3,
+                                1.0, 0.0, 0.0,
+                                0.0, 1.0, 0.0,
+                                0.0, 0.0, 1.0);
+
+        using zgeev_func_eva.zgeev_exec_eva;
+        info=zgeev_exec_eva(a,w,jobvl,jobvr);
+        
+	if(info==0)
+	{
+		say("successful\n");
+		say("eigen values=\n");
+		say(w);
+	}
+}
+
+*/

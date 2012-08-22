@@ -1,0 +1,101 @@
+namespace dgesvd_func{
+
+const int PRINT_DEBUG_STUFF = 0;
+
+function dgesvd_exec(var A,int jobu,int jobvt,var S,var U,var VT)
+{
+
+
+	var pla = loadlib("linalg_group");
+	var lapack = loadlib('liblapack.so');
+    if (lapack == null || !lapack)
+       	die("Cannot find liblapack. Search for the correct paths");
+
+	say("Given Matrix:");
+    	say(A);
+
+	int m,n,lda,ldu,ldvt,lwork,info;
+	m=A.rows;
+	n=A.cols;
+	lda=max(1,m);
+	S.resize(1,min(m,n));
+	ldu=max(m,1);
+
+	if(jobu == 65)
+		U.resize(ldu,m);
+	else
+		U.resize(ldu,min(m,n));
+	
+
+	ldvt=max(m,n);
+
+	VT.resize(ldvt,n);
+
+	var work = new 'NumMatrix2D';
+	lwork=max(1,6*max(m,n));
+	work.resize(1,lwork);
+
+	var dgesvd = dlfunc(lapack, "dgesvd_", "vpppppppppppppp");	
+	if(dgesvd == null || !dgesvd)
+		die("Not DGESVD");
+
+	dgesvd(jobu,jobvt,m,n,A,lda,S,U,ldu,VT,ldvt,work,lwork,info);
+	return info;
+
+}
+
+function max(var a,var b)
+{
+	return a>b?a:b;
+}
+
+function min(var a,var b)
+{
+        return a>b?b:a;
+}
+
+function debug(var matrix, string msg, var args [slurpy])
+{
+    if (PRINT_DEBUG_STUFF) {
+        say(sprintf(msg, args));
+        say(matrix);
+    }
+}
+
+}
+
+/*
+
+function main[main](var args)
+{
+
+	var pla = loadlib("linalg_group");
+	var a = new 'NumMatrix2D';
+	var S = new 'NumMatrix2D';
+	var U = new 'NumMatrix2D';
+	var VT = new 'NumMatrix2D';
+	a.initialize_from_args(3, 3,
+                                1.0, 0.0, 0.0,
+                                0.0, 1.0, 0.0,
+                                0.0, 0.0, 1.0);
+
+    int jobu,jobvt;
+    jobu=jobvt= ord('A', 0);
+
+    using dgesvd_func.dgesvd_exec;
+	int info;
+
+	info=dgesvd_exec(a,jobu,jobvt,S,U,VT);    
+    
+    if(info == 0)
+    {
+    	say("successful");
+    	say(a);
+    	say(S);
+    	say(U);
+    	say(VT);
+    }
+
+}
+
+*/

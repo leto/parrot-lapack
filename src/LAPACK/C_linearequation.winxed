@@ -1,8 +1,8 @@
-namespace dspsv_func{
+namespace zspsv_func{
 
 const int PRINT_DEBUG_STUFF = 0;
 
-function dspsv_exec(var A,var b,int uplo)
+function zspsv_exec(var A,var b,int uplo)
 {
 
 	var pla = loadlib("linalg_group");
@@ -22,11 +22,11 @@ function dspsv_exec(var A,var b,int uplo)
 	ldb=max(1,n);
 	var	AP=create_ap(A,uplo);
 
-	var dspsv = dlfunc(lapack, "dspsv_", "vpppppppp");
-        if(dspsv == null || !dspsv)
-                die("Not DSPSV");
+	var zspsv = dlfunc(lapack, "zspsv_", "vpppppppp");
+        if(zspsv == null || !zspsv)
+                die("Not zspsv");
 	
-	dspsv(uplo,n,nrhs,AP,ipiv,b,ldb,info);
+	zspsv(uplo,n,nrhs,AP,ipiv,b,ldb,info);
 	
 	if(info==0)
 		return AP;
@@ -36,12 +36,13 @@ function create_ap(var A,int uplo)
 {
 	int m,n;
 	m=A.rows;
-        n=A.cols;
+    n=A.cols;
 	var pla = loadlib("linalg_group");
 	int ap_size;
     ap_size=int((n*(n+1))/2);
-	var ap=new 'NumMatrix2D';
+	var ap=new 'ComplexMatrix2D';
 	ap.resize(1,ap_size);
+	say(ap_size);
 	int i,j;
 	if(uplo == 85)
 	{
@@ -49,7 +50,7 @@ function create_ap(var A,int uplo)
 		for(i=0;i<m;++i)
 			for(j=i;j<n;++j)
 			{
-				ap[k] = A[i,j];
+				ap[1,k] = A[i,j];
 				++k;
 			}
 	}
@@ -58,7 +59,7 @@ function create_ap(var A,int uplo)
 		int k=0;
 		for(i=0;i<m;++i)
 			for(j=0;j<=i;++j)
-				ap[k] = A[i,j];
+				ap[1,k] = A[i,j];
 				++k;
 	}
 	else
@@ -88,9 +89,9 @@ function debug(var matrix, string msg, var args [slurpy])
 function main[main](var args)
 {
 	var pla = loadlib("linalg_group");
-	var a = new 'NumMatrix2D';
-    var b=new 'NumMatrix2D';
-    var ap=new 'NumMatrix2D';
+	var a = new 'ComplexMatrix2D';
+    var b=new 'ComplexMatrix2D';
+    var ap=new 'ComplexMatrix2D';
 	int uplo;
 	uplo=85;
 	a.initialize_from_args(3, 3,
@@ -101,8 +102,8 @@ function main[main](var args)
 				1.0,
 				1.0,
 				1.0);
-        using dspsv_func.dspsv_exec;
-        ap=dspsv_exec(a,b,uplo);
+        using zspsv_func.zspsv_exec;
+        ap=zspsv_exec(a,b,uplo);
 
 	say("AP=");
 	say(ap);

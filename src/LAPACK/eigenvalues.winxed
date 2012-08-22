@@ -1,38 +1,31 @@
-namespace dgeev_func{
+namespace dgeev_func_eva{
 
 const int PRINT_DEBUG_STUFF = 0;
 
-function dgeev_exec(var A,var WR,var WI,var VL,var VR)
+function dgeev_exec_eva(var A,var WR,var WI,int jobvl,int jobvr)
 {
         var pla = loadlib("linalg_group");
         var lapack = loadlib('liblapack.so');
         if (lapack == null || !lapack)
                 die("Cannot find liblapack. Search for the correct paths");
-	say("found all functions");
-	int jobvl;
-	int jobvr;
+		var VL=new 'NumMatrix2D';
+        var VR=new 'NumMatrix2D';
 	int m,n,lda,ldvl,ldvr,lwork,info;
 	
 	var dgeev = dlfunc(lapack, "dgeev_", "vpppppppppppppp");
-        if(dgeev == null || !dgeev)
+		if(dgeev == null || !dgeev)
                 die("Not DGEEV");
-/*
-	var WR=new 'NumMatrix2D';
-	var WI=new 'NumMatrix2D';
-	var VL=new 'NumMatrix2D';
-	var VR=new 'NumMatrix2D';
-*/
 
 	var WORK=new 'NumMatrix2D';
-	jobvl=jobvr= ord('V', 0);
-	m=A.rows;
+	
+		m=A.rows;
         n=A.cols;
 	
 	if(m==n)
 	{
 		lda=max(1,n);
 		WR.resize(n,n);
-	     	WI.resize(n,n);
+	    WI.resize(n,n);
 		ldvl=ldvr=max(1,n);
 		VL.resize(ldvl,n);
 		VR.resize(ldvr,n);
@@ -40,24 +33,6 @@ function dgeev_exec(var A,var WR,var WI,var VL,var VR)
 		WORK.resize(lwork,lwork);
 	}
 
-/*
-	else if(m>n)	//rows>cols
-	{
-		lda=max(1,m);
-		WR.resize(m,m);
-                WI.resize(m,m);
-		
-
-
-	}
-	else
-	{
-		lda=max(1,n);
-		WR.resize(n,n);
-                WI.resize(n,n);
-	
-	}	
-*/
 	
 	dgeev(jobvl,jobvr,n,A,lda,WR,WI,VL,ldvl,VR,ldvr,WORK,lwork,info);	
 	return info;
@@ -70,30 +45,30 @@ function max(var a,var b)
 
 }
 
+/*
 
 function main[main](var args)
 {
 
         var pla = loadlib("linalg_group");
         var a = new 'NumMatrix2D';
-	var wr=new 'NumMatrix2D';
+		var wr=new 'NumMatrix2D';
         var wi=new 'NumMatrix2D';
-        var vl=new 'NumMatrix2D';
-        var vr=new 'NumMatrix2D';
+
+        int jobvl,jobvr;
+        jobvl=jobvr= ord('N', 0);
 	var info;
         a.initialize_from_args(3, 3,
                                 11.0, 2.0, 3.0,
                                 4.0, 5.0, 6.0,
                                 7.0, 1.0, 2.0);
 
-        using dgeev_func.dgeev_exec;
-        info=dgeev_exec(a,wr,wi,vl,vr);
+        using dgeev_func_eva.dgeev_exec_eva;
+        info=dgeev_exec_eva(a,wr,wi,jobvl,jobvr);
         
 	if(info==0)
 	{
 		say("successful\n");
-		say("right eigenvectors=\n",vr);
-		say("left eigenvectors=\n",vl);
 		say("eigen values=\n");
 		int i,j;
 		for(i=0;i<3;++i)
@@ -105,3 +80,4 @@ function main[main](var args)
 	}
 }
 
+*/
