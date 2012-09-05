@@ -20,6 +20,15 @@ class Test_zgeev_eve
         using zgeev_func_eve.zgeev_exec_eve;
         info=zgeev_exec_eve(a,w,vl,vr);
         
+/*
+    A:      COMPLEX*16 array, dimension (LDA,N)
+    W:      COMPLEX*16 array, dimension (N)
+    JOBVL: CHARACTER
+    JOBVR: CHARACTER
+          = 'N': left eigenvectors of A are not computed;
+          = 'V': left eigenvectors of A are computed.
+*/
+        
         self.assert.equal(info,0);
         self.assert.equal(vl,a);
         self.assert.equal(vr,a);

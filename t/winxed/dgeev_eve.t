@@ -20,6 +20,15 @@ class Test_dgeev_eve
 
         using dgeev_func_eve.dgeev_exec_eve;
         info=dgeev_exec_eve(a,wr,wi,vl,vr);
+
+/*
+    A:      DOUBLE PRECISION array, dimension (LDA,N)
+    WR:     DOUBLE PRECISION array, dimension (N)
+    WI:     DOUBLE PRECISION array, dimension (N)
+    VL:     DOUBLE PRECISION array, dimension (LDVL,N)
+    VR:     DOUBLE PRECISION array, dimension (LDVR,N)
+
+*/        
         
         self.assert.equal(info,0);
         self.assert.equal(vr,a);

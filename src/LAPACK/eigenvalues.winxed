@@ -1,6 +1,20 @@
+// DGEEV computes for an N-by-N real nonsymmetric matrix A, the eigenvalues and, optionally, the left and/or right eigenvectors.
+// The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real
+
+
 namespace dgeev_func_eva{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+	A:		DOUBLE PRECISION array, dimension (LDA,N)
+	WR:		DOUBLE PRECISION array, dimension (N)
+	WI:		DOUBLE PRECISION array, dimension (N)
+	JOBVL: CHARACTER
+	JOBVR: CHARACTER
+          = 'N': left eigenvectors of A are not computed;
+          = 'V': left eigenvectors of A are computed.
+*/
 
 function dgeev_exec_eva(var A,var WR,var WI,int jobvl,int jobvr)
 {
@@ -8,9 +22,18 @@ function dgeev_exec_eva(var A,var WR,var WI,int jobvl,int jobvr)
         var lapack = loadlib('liblapack.so');
         if (lapack == null || !lapack)
                 die("Cannot find liblapack. Search for the correct paths");
+
+        say("Given Matrix:");
+    	say(A);
+/*
+A is DOUBLE PRECISION array, dimension (LDA,N)
+          On entry, the N-by-N matrix A.
+          On exit, A has been overwritten.
+*/
+
 		var VL=new 'NumMatrix2D';
         var VR=new 'NumMatrix2D';
-	int m,n,lda,ldvl,ldvr,lwork,info;
+		int m,n,lda,ldvl,ldvr,lwork,info;
 	
 	var dgeev = dlfunc(lapack, "dgeev_", "vpppppppppppppp");
 		if(dgeev == null || !dgeev)
@@ -21,8 +44,6 @@ function dgeev_exec_eva(var A,var WR,var WI,int jobvl,int jobvr)
 		m=A.rows;
         n=A.cols;
 	
-	if(m==n)
-	{
 		lda=max(1,n);
 		WR.resize(n,n);
 	    WI.resize(n,n);
@@ -31,12 +52,25 @@ function dgeev_exec_eva(var A,var WR,var WI,int jobvl,int jobvr)
 		VR.resize(ldvr,n);
 		lwork=max(1,n*4);
 		WORK.resize(lwork,lwork);
-	}
 
 	
 	dgeev(jobvl,jobvr,n,A,lda,WR,WI,VL,ldvl,VR,ldvr,WORK,lwork,info);	
+
+/*
+ INFO is INTEGER
+          = 0:  successful exit
+          < 0:  if INFO = -i, the i-th argument had an illegal value.
+          > 0:  if INFO = i, the QR algorithm failed to compute all the
+                eigenvalues, and no eigenvectors have been computed;
+                elements i+1:N of WR and WI contain eigenvalues which
+                have converged.
+ */	
+
 	return info;
+
 }
+
+//computes the max value
 
 function max(var a,var b)
 {
@@ -44,40 +78,3 @@ function max(var a,var b)
 }
 
 }
-
-/*
-
-function main[main](var args)
-{
-
-        var pla = loadlib("linalg_group");
-        var a = new 'NumMatrix2D';
-		var wr=new 'NumMatrix2D';
-        var wi=new 'NumMatrix2D';
-
-        int jobvl,jobvr;
-        jobvl=jobvr= ord('N', 0);
-	var info;
-        a.initialize_from_args(3, 3,
-                                11.0, 2.0, 3.0,
-                                4.0, 5.0, 6.0,
-                                7.0, 1.0, 2.0);
-
-        using dgeev_func_eva.dgeev_exec_eva;
-        info=dgeev_exec_eva(a,wr,wi,jobvl,jobvr);
-        
-	if(info==0)
-	{
-		say("successful\n");
-		say("eigen values=\n");
-		int i,j;
-		for(i=0;i<3;++i)
-		{
-			for(j=0;j<3;++j)
-				print(wr[i,j],"+j",wi[i,j],"\t");
-			say();
-		}
-	}
-}
-
-*/

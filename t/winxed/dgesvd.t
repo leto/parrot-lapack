@@ -24,6 +24,23 @@ class Test_dgesvd
 
     info=dgesvd_exec(a,jobu,jobvt,S,U,VT);    
     
+/*
+A :      DOUBLE PRECISION array, dimension (LDA,N)
+JOBU :   CHARACTER
+JOBVT:   CHARACTER
+          Specifies options for computing all or part of the matrix U:
+          = 'A':  all M columns of U are returned in array U:
+          = 'S':  the first min(m,n) columns of U (the left singular
+                  vectors) are returned in the array U;
+          = 'O':  the first min(m,n) columns of U (the left singular
+                  vectors) are overwritten on the array A;
+          = 'N':  no columns of U (no left singular vectors) are
+                  computed.
+ S :     DOUBLE PRECISION array, dimension (min(M,N))
+ U :     DOUBLE PRECISION array, dimension (LDU,UCOL)
+ VT :    DOUBLE PRECISION array, dimension (LDVT,N)
+*/
+    
         self.assert.equal(info,0);
         self.assert.equal(U,a);
         self.assert.equal(VT,a);

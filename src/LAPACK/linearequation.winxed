@@ -1,6 +1,20 @@
+//DSPSV computes the solution to a real system of linear equations
+//   A * X = B,
+//where A is an N-by-N symmetric matrix stored in packed format and Xand B are N-by-NRHS matrices.
+//where U (or L) is a product of permutation and unit upper (lower) triangular matrices, D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.  The factored form of A is then used to solve the system of equations A * X = B.
+
+
 namespace dspsv_func{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+	A:		DOUBLE PRECISION array, dimension (LDA,N)
+	B:		DOUBLE PRECISION array, dimension (LDB,NRHS)
+	UPLO:	CHARACTER
+         	'U':  Upper triangle of A is stored
+          	'L':  Lower triangle of A is stored.
+*/
 
 function dspsv_exec(var A,var b,int uplo)
 {
@@ -83,31 +97,3 @@ function debug(var matrix, string msg, var args [slurpy])
 
 }
 
-/*
-
-function main[main](var args)
-{
-	var pla = loadlib("linalg_group");
-	var a = new 'NumMatrix2D';
-    var b=new 'NumMatrix2D';
-    var ap=new 'NumMatrix2D';
-	int uplo;
-	uplo=85;
-	a.initialize_from_args(3, 3,
-                                1.0, 0.0, 0.0,
-                                0.0, 1.0, 0.0,
-                                0.0, 0.0, 1.0);
-	b.initialize_from_args(3, 1,
-				1.0,
-				1.0,
-				1.0);
-        using dspsv_func.dspsv_exec;
-        ap=dspsv_exec(a,b,uplo);
-
-	say("AP=");
-	say(ap);
-	say("B=");
-	say(b);
-}
-
-*/

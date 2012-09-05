@@ -22,6 +22,13 @@ class Test_zgetrf{
         using zgetrf_func.zgetrf_exec;
         int info;
         info=zgetrf_exec(a,ipiv);
+
+/*
+    A:      COMPLEX*16 array, dimension (LDA,N)
+    IPIV:   INTEGER array, dimension (min(M,N))
+*/
+
+        
 	say("printing A");
 	say(a);
 	self.assert.equal(info,0);
