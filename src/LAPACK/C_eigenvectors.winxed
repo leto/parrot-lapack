@@ -1,6 +1,19 @@
+//ZGEEV computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues and, optionally, the left and/or right eigenvectors.
+//The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.
+
+
 namespace zgeev_func_eve{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+	A:		COMPLEX*16 array, dimension (LDA,N)
+	W:		COMPLEX*16 array, dimension (N)
+	JOBVL: CHARACTER
+	JOBVR: CHARACTER
+          = 'N': left eigenvectors of A are not computed;
+          = 'V': left eigenvectors of A are computed.
+*/
 
 function zgeev_exec_eve(var A,var W,var VL,var VR)
 {
@@ -15,6 +28,12 @@ function zgeev_exec_eve(var A,var W,var VL,var VR)
 	var zgeev = dlfunc(lapack, "zgeev_", "vpppppppppppppp");
         if(zgeev == null || !zgeev)
                 die("Not zgeev");
+
+/*
+ A is COMPLEX*16 array, dimension (LDA,N)
+          On entry, the N-by-N matrix A.
+          On exit, A has been overwritten.
+*/
 
 	var WORK=new 'ComplexMatrix2D';
 	jobvl=jobvr= ord('V', 0);
@@ -33,9 +52,36 @@ function zgeev_exec_eve(var A,var W,var VL,var VR)
 		WORK.resize(lwork,lwork);
 	}
 
+/*
+VL is COMPLEX*16 array, dimension (LDVL,N)
+          If JOBVL = 'V', the left eigenvectors u(j) are stored one
+          after another in the columns of VL, in the same order
+          as their eigenvalues.
+          If JOBVL = 'N', VL is not referenced.
+          u(j) = VL(:,j), the j-th column of VL.
+          
+VR is COMPLEX*16 array, dimension (LDVR,N)
+          If JOBVR = 'V', the right eigenvectors v(j) are stored one
+          after another in the columns of VR, in the same order
+          as their eigenvalues.
+          If JOBVR = 'N', VR is not referenced.
+          v(j) = VR(:,j), the j-th column of VR.
+
+*/
 	
 	zgeev(jobvl,jobvr,n,A,lda,W,VL,ldvl,VR,ldvr,WORK,lwork,rwork,info);	
+
 	return info;
+/*
+ INFO is INTEGER
+          = 0:  successful exit
+          < 0:  if INFO = -i, the i-th argument had an illegal value.
+          > 0:  if INFO = i, the QR algorithm failed to compute all the
+                eigenvalues, and no eigenvectors have been computed;
+                elements i+1:N of WR and WI contain eigenvalues which
+                have converged.
+ */	
+
 }
 
 function max(var a,var b)
@@ -44,31 +90,3 @@ function max(var a,var b)
 }
 
 }
-
-/*
-
-function main[main](var args)
-{
-
-        var pla = loadlib("linalg_group");
-        var a = new 'ComplexMatrix2D';
-		var w=new 'ComplexMatrix2D';
-        var vl=new 'ComplexMatrix2D';
-        var vr=new 'ComplexMatrix2D';
-	var info;
-        a.initialize_from_args(3, 3,
-                                1.0, 0.0, 0.0,
-                                0.0, 1.0, 0.0,
-                                0.0, 0.0, 1.0);
-
-        using zgeev_func_eve.zgeev_exec_eve;
-        info=zgeev_exec_eve(a,w,vl,vr);
-        
-	if(info==0)
-	{
-		say("right eigenvectors=\n",vr);
-        say("left eigenvectors=\n",vl);
-	}
-}
-
-*/

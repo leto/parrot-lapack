@@ -1,3 +1,5 @@
+//LUDECOMP_FUNC compputes the uform and Lform of a square matrix
+
 $load "inverse.pbc";
 $load "multiplication.pbc";
 
@@ -57,8 +59,6 @@ function Lform(var A,var u)
 	using dgetri_func.dgetri_exec;
         int info;
         info=dgetri_exec(u);
-//say("Here is the error:");
-//	l=A*u;
 	using multiplication.matmul;
         l=matmul(A,u);
 	return l;
@@ -71,21 +71,10 @@ function abs(var a)
 	return (a);
 }
 
+}
+
+
 /*
-function multiply(var P,var Q)
-{
-	
-
-
-
-}
-
-*/
-
-}
-
-
-
 
 function main[main](var args)
 {
@@ -100,21 +89,15 @@ function main[main](var args)
                                 1.0, 1.0, 1.0);
 	using ludecompo_func.Uform;
 	u=Uform(a);
-	say("Successful");
 	say("U=");
 	say(u);
 	say("A=");
 	say(a);
 	using ludecompo_func.Lform;
         l=Lform(a,u);
-        say("Successful");
         say("L=");
         say(l);
 
-
-using dgetri_func.dgetri_exec;
-        int info;
-        info=dgetri_exec(u);
-
-
 }
+
+*/

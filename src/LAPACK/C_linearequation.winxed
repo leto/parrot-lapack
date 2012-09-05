@@ -1,6 +1,26 @@
+/*
+ZSPSV computes the solution to a complex system of linear equations
+    A * X = B,
+ where A is an N-by-N symmetric matrix stored in packed format and X and B are N-by-NRHS matrices.
+
+ The diagonal pivoting method is used to factor A as
+    A = U * D * U**T,  if UPLO = 'U', or
+    A = L * D * L**T,  if UPLO = 'L',
+ where U (or L) is a product of permutation and unit upper (lower) triangular matrices, D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.  The factored form of A is then used to solve the system of equations A * X = B.
+
+*/
+
 namespace zspsv_func{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+	A:		DOUBLE PRECISION array, dimension (LDA,N)
+	B:		DOUBLE PRECISION array, dimension (LDB,NRHS)
+	UPLO:	CHARACTER
+         	'U':  Upper triangle of A is stored
+          	'L':  Lower triangle of A is stored.
+*/
 
 function zspsv_exec(var A,var b,int uplo)
 {
@@ -10,6 +30,20 @@ function zspsv_exec(var A,var b,int uplo)
         if (lapack == null || !lapack)
                 die("Cannot find liblapack. Search for the correct paths");
         
+/*
+ AP is COMPLEX*16 array, dimension (N*(N+1)/2)
+          On entry, the upper or lower triangle of the symmetric matrix
+          A, packed columnwise in a linear array.  The j-th column of A
+          is stored in the array AP as follows:
+          if UPLO = 'U', AP(i + (j-1)*j/2) = A(i,j) for 1<=i<=j;
+          if UPLO = 'L', AP(i + (j-1)*(2n-j)/2) = A(i,j) for j<=i<=n.
+
+          On exit, the block diagonal matrix D and the multipliers used
+          to obtain the factor U or L from the factorization
+          A = U*D*U**T or A = L*D*L**T as computed by ZSPTRF, stored as
+          a packed triangular matrix in the same storage format as A.
+*/
+
 	int m,n,nrhs,ldb,info;
 	m=A.rows;
 	n=A.cols;
@@ -84,31 +118,3 @@ function debug(var matrix, string msg, var args [slurpy])
 
 }
 
-/*
-
-function main[main](var args)
-{
-	var pla = loadlib("linalg_group");
-	var a = new 'ComplexMatrix2D';
-    var b=new 'ComplexMatrix2D';
-    var ap=new 'ComplexMatrix2D';
-	int uplo;
-	uplo=85;
-	a.initialize_from_args(3, 3,
-                                1.0, 0.0, 0.0,
-                                0.0, 1.0, 0.0,
-                                0.0, 0.0, 1.0);
-	b.initialize_from_args(3, 1,
-				1.0,
-				1.0,
-				1.0);
-        using zspsv_func.zspsv_exec;
-        ap=zspsv_exec(a,b,uplo);
-
-	say("AP=");
-	say(ap);
-	say("B=");
-	say(b);
-}
-
-*/

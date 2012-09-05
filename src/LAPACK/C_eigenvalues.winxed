@@ -1,6 +1,19 @@
+//ZGEEV computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues and, optionally, the left and/or right eigenvectors.
+//The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.
+
+
 namespace zgeev_func_eva{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+	A:		COMPLEX*16 array, dimension (LDA,N)
+	W:		COMPLEX*16 array, dimension (N)
+	JOBVL: CHARACTER
+	JOBVR: CHARACTER
+          = 'N': left eigenvectors of A are not computed;
+          = 'V': left eigenvectors of A are computed.
+*/
 
 function zgeev_exec_eva(var A,var W,int jobvl,int jobvr)
 {
@@ -8,6 +21,13 @@ function zgeev_exec_eva(var A,var W,int jobvl,int jobvr)
         var lapack = loadlib('liblapack.so');
         if (lapack == null || !lapack)
                 die("Cannot find liblapack. Search for the correct paths");
+
+/*
+ A is COMPLEX*16 array, dimension (LDA,N)
+          On entry, the N-by-N matrix A.
+          On exit, A has been overwritten.
+*/
+                
 		var VL=new 'ComplexMatrix2D';
         var VR=new 'ComplexMatrix2D';
 		int m,n,lda,ldvl,ldvr,lwork,info,rwork;
@@ -35,7 +55,19 @@ function zgeev_exec_eva(var A,var W,int jobvl,int jobvr)
 
 	
 	zgeev(jobvl,jobvr,n,A,lda,W,VL,ldvl,VR,ldvr,WORK,lwork,rwork,info);	
+
 	return info;
+
+/*
+ INFO is INTEGER
+          = 0:  successful exit
+          < 0:  if INFO = -i, the i-th argument had an illegal value.
+          > 0:  if INFO = i, the QR algorithm failed to compute all the
+                eigenvalues, and no eigenvectors have been computed;
+                elements i+1:N of WR and WI contain eigenvalues which
+                have converged.
+ */	
+
 }
 
 function max(var a,var b)
@@ -44,33 +76,3 @@ function max(var a,var b)
 }
 
 }
-
-/*
-
-function main[main](var args)
-{
-
-        var pla = loadlib("linalg_group");
-        var a = new 'ComplexMatrix2D';
-		var w=new 'ComplexMatrix2D';
-
-        int jobvl,jobvr;
-        jobvl=jobvr= ord('N', 0);
-		var info;
-        a.initialize_from_args(3, 3,
-                                1.0, 0.0, 0.0,
-                                0.0, 1.0, 0.0,
-                                0.0, 0.0, 1.0);
-
-        using zgeev_func_eva.zgeev_exec_eva;
-        info=zgeev_exec_eva(a,w,jobvl,jobvr);
-        
-	if(info==0)
-	{
-		say("successful\n");
-		say("eigen values=\n");
-		say(w);
-	}
-}
-
-*/
