@@ -21,6 +21,11 @@ class Test_zgeqrf
 	int info;
 	using zgeqrf_func.zgeqrf_exec;
 	info=zgeqrf_exec(a);
+
+/*
+A :     COMPLEX*16 array, dimension (LDA,N)
+*/
+    
     
     self.assert.equal(info,0);
 	self.assert.equal(a,b);
