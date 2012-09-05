@@ -13,6 +13,9 @@ class Test_zgetri{
 	using zgetri_func.zgetri_exec;
         int info;
         info=zgetri_exec(a);
+
+// A is COMPLEX*16 array, dimension (LDA,N)
+        
 	self.assert.equal(info,0);
 	say(a);
 

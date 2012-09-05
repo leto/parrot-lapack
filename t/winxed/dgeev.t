@@ -29,12 +29,20 @@ class Test_dgeev
         using dgeev_func_eva.dgeev_exec_eva;
         info=dgeev_exec_eva(a,wr,wi,jobvl,jobvr);
         
+/*
+    A:      DOUBLE PRECISION array, dimension (LDA,N)
+    WR:     DOUBLE PRECISION array, dimension (N)
+    WI:     DOUBLE PRECISION array, dimension (N)
+    JOBVL: CHARACTER
+    JOBVR: CHARACTER
+          = 'N': left eigenvectors of A are not computed;
+          = 'V': left eigenvectors of A are computed.
+*/
+        
         self.assert.equal(info,0);
         self.assert.equal(wr,b);
         self.assert.equal(wi,c);
-	if(info==0)
-	{
-		say("successful\n");
+	
 		say("eigen values=\n");
 		int i,j;
 		for(i=0;i<3;++i)
@@ -43,7 +51,6 @@ class Test_dgeev
 				print(wr[i,j],"+j",wi[i,j],"\t");
 			say();
 		}
-	}
 	
     }
 }

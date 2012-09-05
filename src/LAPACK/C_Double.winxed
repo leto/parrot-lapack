@@ -1,6 +1,13 @@
+// ZGETRF computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+
 namespace zgetrf_func{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+	A:	 	COMPLEX*16 array, dimension (LDA,N)
+	IPIV: 	INTEGER array, dimension (min(M,N))
+*/
 
 function zgetrf_exec(var A,int ipiv)
 {
@@ -11,6 +18,14 @@ function zgetrf_exec(var A,int ipiv)
 
 	say("Given Matrix:");
     	say(A);
+
+/*
+      A is COMPLEX*16 array, dimension (LDA,N)
+          On entry, the M-by-N matrix to be factored.
+          On exit, the factors L and U from the factorization
+          A = P*L*U; the unit diagonal elements of L are not stored.
+ */
+
 
 	int m,n,lda,ipiv_size,info;
 	m=A.rows;
@@ -24,6 +39,16 @@ function zgetrf_exec(var A,int ipiv)
 
 	zgetrf(m,n,A,lda,ipiv,info);
 	return info;
+
+/*
+INFO is INTEGER
+          = 0:  successful exit
+          < 0:  if INFO = -i, the i-th argument had an illegal value
+          > 0:  if INFO = i, U(i,i) is exactly zero. The factorization
+                has been completed, but the factor U is exactly
+                singular, and division by zero will occur if it is used
+                to solve a system of equations.
+*/
 
 }
 
@@ -56,34 +81,3 @@ function debug(var matrix, string msg, var args [slurpy])
 }
 
 }
-
-/*
-
-function main[main](var args)
-{
-
-	var pla = loadlib("linalg_group");
-	var a = new 'ComplexMatrix2D';
-	a.initialize_from_args(3, 3,
-                                1.0, 0.0, 0.0,
-                                0.0, 1.0, 0.0,
-                                0.0, 0.0, 1.0);
-	using zgetrf_func.ipiv_size;
-        int ipiv_size_v;
-	ipiv_size_v=ipiv_size(a);
-	say(ipiv_size_v);
-	int ipiv[ipiv_size_v];
-	int i;
-	for(i=0;i<ipiv_size_v;i++)
-		ipiv[i]=0;
-	say("printing ipiv:\n",ipiv);
-    using zgetrf_func.zgetrf_exec;
-	int info;
-    info=zgetrf_exec(a,ipiv);
-    say("printing A");
-    say(a);
-	say();
-	say(ipiv);
-}
-
-*/

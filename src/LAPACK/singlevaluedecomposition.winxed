@@ -1,6 +1,32 @@
+/*
+DGESVD computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and/or right singular vectors. The SVD is written
+
+      A = U * SIGMA * transpose(V)
+
+ where SIGMA is an M-by-N matrix which is zero except for its min(m,n) diagonal elements, U is an M-by-M orthogonal matrix, and
+ V is an N-by-N orthogonal matrix.  The diagonal elements of SIGMA are the singular values of A; they are real and non-negative, and are returned in descending order.  The first min(m,n) columns of U and V are the left and right singular vectors of A.
+*/
+
 namespace dgesvd_func{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+A :	 	 DOUBLE PRECISION array, dimension (LDA,N)
+JOBU :	 CHARACTER
+JOBVT:	 CHARACTER
+          Specifies options for computing all or part of the matrix U:
+          = 'A':  all M columns of U are returned in array U:
+          = 'S':  the first min(m,n) columns of U (the left singular
+                  vectors) are returned in the array U;
+          = 'O':  the first min(m,n) columns of U (the left singular
+                  vectors) are overwritten on the array A;
+          = 'N':  no columns of U (no left singular vectors) are
+                  computed.
+ S :	 DOUBLE PRECISION array, dimension (min(M,N))
+ U :	 DOUBLE PRECISION array, dimension (LDU,UCOL)
+ VT :	 DOUBLE PRECISION array, dimension (LDVT,N)
+*/
 
 function dgesvd_exec(var A,int jobu,int jobvt,var S,var U,var VT)
 {
@@ -39,8 +65,32 @@ function dgesvd_exec(var A,int jobu,int jobvt,var S,var U,var VT)
 	if(dgesvd == null || !dgesvd)
 		die("Not DGESVD");
 
+/*
+ A is DOUBLE PRECISION array, dimension (LDA,N)
+          On entry, the M-by-N matrix A.
+          On exit,
+          if JOBU = 'O',  A is overwritten with the first min(m,n)
+                          columns of U (the left singular vectors,
+                          stored columnwise);
+          if JOBVT = 'O', A is overwritten with the first min(m,n)
+                          rows of V**T (the right singular vectors,
+                          stored rowwise);
+          if JOBU .ne. 'O' and JOBVT .ne. 'O', the contents of A
+                          are destroyed.
+*/
+
 	dgesvd(jobu,jobvt,m,n,A,lda,S,U,ldu,VT,ldvt,work,lwork,info);
 	return info;
+
+/*
+ INFO is INTEGER
+          = 0:  successful exit.
+          < 0:  if INFO = -i, the i-th argument had an illegal value.
+          > 0:  if DBDSQR did not converge, INFO specifies how many
+                superdiagonals of an intermediate bidiagonal form B
+                did not converge to zero. See the description of WORK
+                above for details.
+*/
 
 }
 
@@ -63,39 +113,3 @@ function debug(var matrix, string msg, var args [slurpy])
 }
 
 }
-
-/*
-
-function main[main](var args)
-{
-
-	var pla = loadlib("linalg_group");
-	var a = new 'NumMatrix2D';
-	var S = new 'NumMatrix2D';
-	var U = new 'NumMatrix2D';
-	var VT = new 'NumMatrix2D';
-	a.initialize_from_args(3, 3,
-                                1.0, 0.0, 0.0,
-                                0.0, 1.0, 0.0,
-                                0.0, 0.0, 1.0);
-
-    int jobu,jobvt;
-    jobu=jobvt= ord('A', 0);
-
-    using dgesvd_func.dgesvd_exec;
-	int info;
-
-	info=dgesvd_exec(a,jobu,jobvt,S,U,VT);    
-    
-    if(info == 0)
-    {
-    	say("successful");
-    	say(a);
-    	say(S);
-    	say(U);
-    	say(VT);
-    }
-
-}
-
-*/

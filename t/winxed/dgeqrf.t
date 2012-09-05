@@ -18,6 +18,9 @@ class Test_dgeqrf
 	${ clone a, b};
 	using dgeqrf_func.dgeqrf_exec;
 	info=dgeqrf_exec(a);
+
+//A :       DOUBLE PRECISION array, dimension (LDA,N)
+
         self.assert.equal(info,0);
 	self.assert.equal(a,b);
 	say("printing A");

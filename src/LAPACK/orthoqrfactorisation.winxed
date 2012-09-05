@@ -1,6 +1,17 @@
+//DORGQR generates an M-by-N real matrix Q with orthonormal columns,which is defined as the first N columns of a product of K lementary
+ reflectors of order M
+
+
 namespace dorgqr_func{
 
 const int PRINT_DEBUG_STUFF = 0;
+
+/*
+A :		DOUBLE PRECISION array, dimension (LDA,N)
+K :		INTEGER
+		The number of elementary reflectors whose product defines the
+        matrix Q. N >= K >= 0.
+*/
 
 function dorgqr_exec(var A,int k)
 {
@@ -47,17 +58,34 @@ function dorgqr_exec(var A,int k)
 	for(i=0;i<work_s;++i)
 		work[i]=0;
 	
+/*
+ A is DOUBLE PRECISION array, dimension (LDA,N)
+          On entry, the i-th column must contain the vector which
+          defines the elementary reflector H(i), for i = 1,2,...,k, as
+          returned by DGEQRF in the first k columns of its array
+          argument A.
+*/
 	
 	dorgqr(m,n,k,A,lda,tau,work,lwork,info);
 
+
 	return info;
 
+/*
+ INFO is INTEGER
+          = 0:  successful exit
+          < 0:  if INFO = -i, the i-th argument has an illegal value
+ */
 }
+
+//computes the max value
 
 function max(var a,var b)
 {
         return a>b?a:b;
 }
+
+//computes the min value
 
 function min(var a,var b)
 {
@@ -73,24 +101,3 @@ function debug(var matrix, string msg, var args [slurpy])
 }
 
 }
-
-/*
-
-function main[main](var args)
-{
-
-        var pla = loadlib("linalg_group");
-        var a = new 'NumMatrix2D';
-        a.initialize_from_args(3, 3,
-                                1.0, 0.0, 0.0,
-                                0.0, 1.0, 0.0,
-                                0.0, 0.0, 1.0);
-        using dorgqr_func.dorgqr_exec;
-        int info;
-        info=dorgqr_exec(a,2);
-	if(info==0)
-		say(a);
-	say("");
-}
-
-*/
