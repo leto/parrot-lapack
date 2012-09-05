@@ -7,9 +7,9 @@ class Test_dgetrf{
 	var pla = loadlib("linalg_group");
 	var a = new 'NumMatrix2D';
         a.initialize_from_args(3, 3,
-                                11.0, 2.0, 3.0,
-                                4.0, 5.0, 6.0,
-                                7.0, 1.0, 2.0);
+                                2.0, -1.0, 1.0,
+                                4.0, 1.0, -1.0,
+                                1.0, 1.0, 1.0);
 	using dgetrf_func.ipiv_size;
         int ipiv_size_v;
         ipiv_size_v=ipiv_size(a);
@@ -22,6 +22,12 @@ class Test_dgetrf{
         using dgetrf_func.dgetrf_exec;
         int info;
         info=dgetrf_exec(a,ipiv);
+
+/*
+    A:      DOUBLE PRECISION array, dimension (LDA,N)
+    IPIV:   INTEGER array, dimension (min(M,N))
+*/
+
 	say("printing A");
 	say(a);
 	self.assert.equal(info,0);

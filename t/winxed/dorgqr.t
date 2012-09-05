@@ -18,6 +18,13 @@ class Test_dorgqr
 	using dorgqr_func.dorgqr_exec;
 	info=dorgqr_exec(a,0);
 	
+/*
+A :		DOUBLE PRECISION array, dimension (LDA,N)
+K :		INTEGER
+		The number of elementary reflectors whose product defines the
+        matrix Q. N >= K >= 0.
+*/
+	
         self.assert.equal(info,0);
 	self.assert.equal(a,b);
 	say("printing A");

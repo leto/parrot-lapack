@@ -23,6 +23,14 @@ class Test_dspsv
         using dspsv_func.dspsv_exec;
         ap=dspsv_exec(a,b,uplo);
 
+/*
+	A:		DOUBLE PRECISION array, dimension (LDA,N)
+	B:		DOUBLE PRECISION array, dimension (LDB,NRHS)
+	UPLO:	CHARACTER
+         	'U':  Upper triangle of A is stored
+          	'L':  Lower triangle of A is stored.
+*/
+
 		say("AP=");
 		say(ap);
 		say("B=");
